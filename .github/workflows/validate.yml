@@ -1,0 +1,25 @@
+name: validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install pandas pyyaml
+      - name: Build all outputs
+        run: python src/build_all.py
+      - name: Validate sources
+        run: python src/validate_sources.py
+      - name: Run tests
+        run: python tests/test_calculations.py
+      - name: Check generated files match
+        run: |
+          git diff --exit-code || (echo "Generated files differ from committed — run build_all.py" && exit 1)

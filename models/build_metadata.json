@@ -1,0 +1,13 @@
+{
+  "generated_at": "2026-08-11T15:32:24.478442+00:00",
+  "assumptions_hash": "ede4a77815cf",
+  "sources_hash": "458767db861a",
+  "results": {
+    "gpu_tco_rows": 5,
+    "margin_rows": 35,
+    "gpu_pricing_rows": 6,
+    "market_rows": 3,
+    "maas_pricing_rows": 8,
+    "maas_deployment_rows": 7
+  }
+}

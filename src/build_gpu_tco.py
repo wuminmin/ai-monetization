@@ -101,11 +101,15 @@ def node_power_at_mfu(active_mfu: float) -> float:
     Uses nameplate max as upper bound, idle as lower bound.
     active_mfu ~0.5 maps roughly to 7kW for DGX H100.
     """
+    if not 0 <= active_mfu <= 1:
+        raise ValueError(f"MFU must be between 0 and 1, got {active_mfu}")
     if IDLE_POWER_KW is None:
         raise ValueError("idle_power_kw is null in assumptions — needs measured value")
-    return IDLE_POWER_KW + (ACTIVE_POWER_AT_TARGET_MFU_KW - IDLE_POWER_KW) * (
+    calculated = IDLE_POWER_KW + (ACTIVE_POWER_AT_TARGET_MFU_KW - IDLE_POWER_KW) * (
         active_mfu / 0.50
     ) ** POWER_CURVE_EXPONENT
+    # Clamp to physical bounds
+    return min(NAMEPLATE_MAX_POWER_KW, max(IDLE_POWER_KW, calculated))
 
 
 def avg_node_power(s: dict) -> float:

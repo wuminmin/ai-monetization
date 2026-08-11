@@ -1,0 +1,137 @@
+global_notes:
+- ALL margins are INVALID pending benchmark (throughput_tps = null for all models).
+- No profit/margin calculation should be shown until real benchmark results are available.
+- Competitor prices are per-route (one row per provider route).
+- Model architecture/params sourced from OpenRouter API descriptions (2026-08-11).
+- OpenRouter is authoritative for its OWN route prices, but developer model cards
+  should be used for deployment specs.
+models:
+- active_params_b: 13
+  arch: MoE
+  deployments:
+  - benchmark_status: not_run
+    gpu_config: 8xH100 SXM5
+    gpu_count: 8
+    name: Production candidate
+    note: Standard TP=8 for MoE inference; throughput needs benchmark
+    pipeline_parallel: 1
+    tensor_parallel: 8
+    throughput_source: null
+    throughput_tps: null
+  has_valid_margin: false
+  model_id: DeepSeek-V4-Flash-0731
+  native_context: 1048576
+  openrouter_slug: deepseek/deepseek-v4-flash-0731
+  total_params_b: 284
+  weight_format: FP8
+- active_params_b: 49
+  arch: MoE
+  deployments:
+  - benchmark_status: not_run
+    gpu_config: 16xH100 (2 nodes)
+    gpu_count: 16
+    name: Multi-node candidate
+    note: 1.6T total requires multi-node TP=8 PP=2
+    pipeline_parallel: 2
+    tensor_parallel: 8
+    throughput_source: null
+    throughput_tps: null
+  has_valid_margin: false
+  model_id: DeepSeek-V4-Pro
+  native_context: 1048576
+  openrouter_slug: deepseek/deepseek-v4-pro
+  total_params_b: 1600
+  weight_format: FP8
+- active_params_b: 3
+  arch: MoE (linear attention hybrid)
+  deployments:
+  - benchmark_status: not_run
+    gpu_config: 8xH100 SXM5
+    gpu_count: 8
+    name: Official long-context example (conservative)
+    note: Official example uses TP=8 for 262K context. Previous 1xH100+1M+28K tok/s
+      was unsupported.
+    pipeline_parallel: 1
+    tensor_parallel: 8
+    throughput_source: null
+    throughput_tps: null
+  extended_context: 1010000
+  has_valid_margin: false
+  model_id: Qwen3.5-35B-A3B
+  native_context: 262144
+  openrouter_slug: qwen/qwen3.5-flash-02-23
+  total_params_b: 35
+  weight_format: FP8
+- active_params_b: 9
+  arch: Dense
+  deployments:
+  - benchmark_status: not_run
+    gpu_config: 1xH100
+    gpu_count: 1
+    name: Single GPU candidate
+    note: 9B dense, BF16 weights ~18GB, fits single H100 with ample KV cache
+    pipeline_parallel: 1
+    tensor_parallel: 1
+    throughput_source: null
+    throughput_tps: null
+  has_valid_margin: false
+  model_id: Qwen3.5-9B
+  native_context: 262144
+  openrouter_slug: qwen/qwen3.5-9b
+  total_params_b: 9
+  weight_format: BF16
+- active_params_b: 5.1
+  arch: MoE
+  deployments:
+  - benchmark_status: not_run
+    gpu_config: 1xH100
+    gpu_count: 1
+    name: Single GPU (MXFP4)
+    note: 117B x 4bit / 8 = 58.5GB, fits single H100 (OpenAI official). Throughput
+      TBD.
+    pipeline_parallel: 1
+    tensor_parallel: 1
+    throughput_source: null
+    throughput_tps: null
+  has_valid_margin: false
+  model_id: gpt-oss-120b
+  native_context: 131072
+  openrouter_slug: openai/gpt-oss-120b
+  total_params_b: 117
+  weight_format: MXFP4
+- active_params_b: 30.7
+  arch: Dense
+  deployments:
+  - benchmark_status: not_run
+    gpu_config: 1xH100
+    gpu_count: 1
+    name: Single GPU (BF16, limited KV cache)
+    note: BF16 weights ~62GB / 80GB; KV cache limited. INT8 recommended for concurrency.
+    pipeline_parallel: 1
+    tensor_parallel: 1
+    throughput_source: null
+    throughput_tps: null
+  has_valid_margin: false
+  model_id: gemma-4-31b-it
+  native_context: 262144
+  openrouter_slug: google/gemma-4-31b-it
+  total_params_b: 30.7
+  weight_format: BF16
+- active_params_b: 32
+  arch: MoE (reasoning)
+  deployments:
+  - benchmark_status: not_run
+    gpu_config: 8xH100 SXM5
+    gpu_count: 8
+    name: Production candidate
+    note: Reasoning model with thinking tokens. Throughput TBD.
+    pipeline_parallel: 1
+    tensor_parallel: 8
+    throughput_source: null
+    throughput_tps: null
+  has_valid_margin: false
+  model_id: GLM-5.2
+  native_context: 1048576
+  openrouter_slug: z-ai/glm-5.2
+  total_params_b: 350
+  weight_format: FP8
