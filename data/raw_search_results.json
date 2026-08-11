@@ -1,0 +1,505 @@
+{
+  "gpu_pricing": {
+    "PLDT VITRO GPU as a Service pricing plans 2025": [
+      {
+        "title": "GPU as a Service: Key Benefits and Providers in 2025",
+        "link": "https://www.voltagepark.com/blog/gpu-as-a-service-key-benefits-and-providers-in-2025",
+        "content": "With flexible pricing models like pay-as-you-go and subscription options, Pricing varies by node type and GPU. Pricing is user-controlled.",
+        "refer": "ref_1"
+      },
+      {
+        "title": "GPU as a Service (GPUaaS): Providers, Pricing, Trends & ...",
+        "link": "https://stlpartners.com/articles/data-centres/gpu-as-a-service/",
+        "content": "This guide compares hyperscalers, data centre operators, hardware-led offers and AI-cloud startups, with pricing patterns and when to choose GPUaaS.",
+        "refer": "ref_2"
+      },
+      {
+        "title": "GPU Cloud Cost Comparison: An AI Startup's Guide for 2025",
+        "link": "https://www.gmicloud.ai/en/blog/2026-gpu-cloud-cost-comparison",
+        "content": "NVIDIA H100 GPUs starting at $2.00/hour and next-gen NVIDIA H200 GPUs at $2.60/hour (container).",
+        "refer": "ref_3"
+      },
+      {
+        "title": "GPU Cloud Computing: Expert Guide to Choosing the ...",
+        "link": "https://www.zadara.com/blog/2025/01/01/gpu-cloud-computing-expert-guide-to-choosing-the-right-provider-2025/",
+        "content": "Understanding Cloud GPU Computing in 2025 · Key Factors to Evaluate Cloud GPU Providers · Comparing Top GPU Cloud Computing Service Providers.",
+        "refer": "ref_4"
+      },
+      {
+        "title": "Vast.ai: Rent GPUs",
+        "link": "https://vast.ai/?srsltid=AfmBOopllXkCT9a9z1jwiK6cuCaSvjjcHMuxf8RSGy5MpSov4TK_1fLW",
+        "content": "Rent high-performance cloud GPUs at low cost with Vast.ai. Real-time pricing. Per-second billing. Get Started for $5 Compare. Cost: $5.12/hr | Uptime: 3m 22s. ...",
+        "refer": "ref_5"
+      },
+      {
+        "title": "The state of cloud GPUs in 2025: costs, performance ...",
+        "link": "https://dstack.ai/blog/state-of-cloud-gpu-2025/",
+        "content": "This is a practical map for teams renting GPUs … savings plans. 30–70% below on-demand. Highest $/hr. Limited availability for hot SKUs. 20–60% ...",
+        "refer": "ref_6"
+      },
+      {
+        "title": "GPU Cloud Prices Collapse | Introl Blog",
+        "link": "https://introl.com/blog/gpu-cloud-price-collapse-h100-64-percent-drop-2025",
+        "content": "The Silicon Data H100 Rental Index stood at $2.36 in June 2025, down from $3.06 in September 2024, marking a 23% decline in less than a year.",
+        "refer": "ref_7"
+      },
+      {
+        "title": "7 cheapest cloud GPU providers in 2026 | Blog",
+        "link": "https://northflank.com/blog/cheapest-cloud-gpu-providers",
+        "content": "I've analyzed the most popular GPU configurations across different providers to show you the pricing as of September 2025. ... What is GPU-as-a- ...",
+        "refer": "ref_8"
+      }
+    ],
+    "PLDT ePLDT VITRO Sta Rosa data center capacity MW specifications": [
+      {
+        "title": "ePLDT VITRO Sta Rosa",
+        "link": "https://www.datacentermap.com/philippines/santa-rosa/epldt-vitro-sta-rosa/",
+        "content": "VITRO Sta. Rosa will have an initial power capacity of 14MW in early 2024 and will further increase to 50MW once fully operational",
+        "refer": "ref_1"
+      },
+      {
+        "title": "PLDT VITRO: Sta. Rosa Data Center",
+        "link": "https://baxtel.com/data-center/pldt-vitro-sta-rosa",
+        "content": "set to offer at least 100 MW of capacity. boost its 65% data center market capacity.Details … develop a 69 MW colocation data...",
+        "refer": "ref_2"
+      },
+      {
+        "title": "Data Center Sites",
+        "link": "https://vitrodc.com/data-centers/data-center-sites/",
+        "content": "Scalable Capacity · 6,082 sqm colocation space · 12.3 MW Total IT power capacity · 8 KW average power per rack · Direct internet access · Carrier neutral with four ( ...",
+        "refer": "ref_3"
+      },
+      {
+        "title": "ICYMI: VITRO Inc., the data center unit of PLDT Group ...",
+        "link": "https://www.facebook.com/BilyonaryoPh/posts/icymi-vitro-inc-the-data-center-unit-of-pldt-group-reported-a-36-year-on-year-in/1112397381095708/",
+        "content": "Largest Hyperscale Data Center, PLDT Group's 11th VITRO facility to rise in Sta. Rosa, Laguna with a total power capacity of 100 megawatts.",
+        "refer": "ref_4"
+      },
+      {
+        "title": "Grand Launching of the VITRO Santa Rosa (VSR) Data Center",
+        "link": "https://www.youtube.com/watch?v=MKpIzc30ADU",
+        "content": "With an initial IT capacity of 50 megawatts and over 13,000 square meters of white space, Powered by NVIDIA GPU servers, 35 percent of its ...",
+        "refer": "ref_5"
+      },
+      {
+        "title": "PLDT confirms plan for 12th data center as it launches the ...",
+        "link": "https://www.lightreading.com/data-centers/pldt-confirms-plan-for-12th-data-center-as-it-launches-the-first-ai-ready-hyperscale-facility-in-the-philippines",
+        "content": "The newly inaugurated Vitro Sta. Rosa was designed with a capacity of 50 MW, increasing Vitro's combined capacity by 50%. The company's other facilities in ...",
+        "refer": "ref_6"
+      },
+      {
+        "title": "Vitro planning 100MW data center in Philippines - DCD",
+        "link": "https://www.datacenterdynamics.com/en/news/vitro-planning-100mw-data-center-in-philippines/",
+        "content": "up to 50kW per rack, The data center is anticipated to have an initial IT capacity of 10MW. expandable to 36MW across more than 13,000 sqm (139 ...",
+        "refer": "ref_7"
+      },
+      {
+        "title": "VITRO (an ePLDT Company)",
+        "link": "https://www.datacenters.com/providers/vitro-an-epldt-company",
+        "content": "Rosa designed to meet Tier 3/Tier 4 standards, supporting hyperscale deployment requirements across power, cooling, and network capacity.",
+        "refer": "ref_8"
+      },
+      {
+        "title": "ABB energizes VITRO Santa Rosa data center",
+        "link": "https://bworldonline.com/corporate/2025/12/19/719953/abb-energizes-vitro-santa-rosa-data-center/",
+        "content": "Across all VITRO sites, the combined capacity is nearly 100 MW. PLDT is also advancing plans for its 12th and largest data center, to be built ...",
+        "refer": "ref_9"
+      }
+    ],
+    "Philippines data center market size revenue forecast 2025 2030": [
+      {
+        "title": "Philippines Data Center Colocation Market",
+        "link": "https://www.arizton.com/market-reports/philippines-data-center-colocation-market",
+        "content": "The Philippines data center colocation market size was valued at USD 153 million in 2024 and is expected to reach USD 663 million by 2030,",
+        "refer": "ref_1"
+      },
+      {
+        "title": "Philippines Data Center Market Investment Report 2025 ...",
+        "link": "https://www.globenewswire.com/news-release/2025/02/13/3025781/28124/en/philippines-data-center-market-investment-report-2025-2030-coverage-of-22-existing-and-11-upcoming-third-party-data-center-facilities-across-7-cities-in-the-philippines.html",
+        "content": "The Philippines Data Center Market was valued at USD 633 million in 2024, and is projected to reach USD 1.97 billion by 2030, rising at a CAGR ...",
+        "refer": "ref_2"
+      },
+      {
+        "title": "Philippines Data Center Market Share & Size 2031 Outlook",
+        "link": "https://www.mordorintelligence.com/industry-reports/philippines-data-center-market",
+        "content": "In terms of installed base, the market is expected to grow from 632.80 megawatt in 2025 to 852.80 megawatt by 2030, at a CAGR of 6.15% during ...",
+        "refer": "ref_3"
+      },
+      {
+        "title": "Data Center - Philippines | Statista Market Forecast",
+        "link": "https://www.statista.com/outlook/tmo/data-center/philippines?srsltid=AfmBOoo5uA_A-C2Hgz4pRQFpUdfl5sZPCQ7tYF9dC_orp0dyiP2M4pq-",
+        "content": "Revenue in the Data Center market in the Philippines is forecasted to reach US$****bn. The revenue is anticipated to exhibit an annual growth rate",
+        "refer": "ref_4"
+      },
+      {
+        "title": "Philippines Data Center Market Investment Analysis & ...",
+        "link": "https://www.businesswire.com/news/home/20250217411085/en/Philippines-Data-Center-Market-Investment-Analysis-Growth-Opportunities-2025-2030-New-Market-Entrants-include-Digital-Halo-EdgeConneX-Equinix-Megawide-Construction-and-YCO-Cloud---ResearchAndMarkets.com",
+        "content": "The Philippines Data Center Market was valued at USD 633 million in 2024, and is projected to reach USD 1.97 billion by 2030, rising at a CAGR ...",
+        "refer": "ref_5"
+      },
+      {
+        "title": "Data Center Market Analysis, Size, and Forecast 2026-2030",
+        "link": "https://www.technavio.com/report/data-center-market-industry-analysis",
+        "content": "The Data Center Market size is expected to grow by USD 622.2 million from 2026-2030 expanding at a CAGR of 15.9% during the forecast period.",
+        "refer": "ref_6"
+      },
+      {
+        "title": "Data Center Services Market Growth Report 2026-2030",
+        "link": "https://www.thebusinessresearchcompany.com/report/data-center-services-global-market-report",
+        "content": "The Data Center Services market was valued at $83.53 billion in 2025, increased to $96.85 billion in 2026, and is projected to reach $168.25 billion by 2030.",
+        "refer": "ref_7"
+      },
+      {
+        "title": "Philippines Data Center Market: The Road to 1GW by 2030",
+        "link": "https://www.youtube.com/watch?v=wpomtGTnw6I",
+        "content": "data centers are competitive at ~10.4 cents/kWh, Government cloud adoption surged from 5% in 2022 to a projected 35% this year.",
+        "refer": "ref_8"
+      },
+      {
+        "title": "Philippines Data Center Market: The Road to 1GW by 2030",
+        "link": "https://datacenterhawk.com/resources/hawktalks/philippines-data-center-market-the-road-to-1gw-by-2030",
+        "content": "We will explore how legislative changes have created a fertile ground for investment, examine the powerful demand signals from cloud services ...",
+        "refer": "ref_9"
+      }
+    ]
+  },
+  "market_data": {
+    "gpu_cost": [
+      {
+        "title": "How much does an NVIDIA H100 GPU cost? | Blog",
+        "link": "https://northflank.com/blog/how-much-does-an-nvidia-h100-gpu-cost",
+        "content": "As of mid-2025: H100 80GB PCIe typically ranges from $25,000 to $30,000. Pricing depends on configuration, cooling, and whether the purchase ...",
+        "refer": "ref_1"
+      },
+      {
+        "title": "NVIDIA H100 Price Guide 2026: GPU Costs, Cloud ...",
+        "link": "https://jarvislabs.ai/blog/h100-price",
+        "content": "NVIDIA H100 price starts at $25000 to buy or $2.69/hour to rent. Starting at ~$25,000 per GPU; multi-GPU setups can exceed $400,000. Q1 2025: $ ...",
+        "refer": "ref_2"
+      },
+      {
+        "title": "Understanding Nvidia DGX H100 Cost and Value - Nodestream",
+        "link": "https://nodestream.blockwaresolutions.com/blog/understanding-nvidia-dgx-h100-cost-and-value/",
+        "content": "Most people focus on the wild price tag, but a single DGX H100 system can run up to $460,000. That sounds staggering until you realize this ...",
+        "refer": "ref_3"
+      },
+      {
+        "title": "H100 GPU Cost In 2026: Buy, Rent, And Cloud Pricing ...",
+        "link": "https://www.cloudzero.com/blog/h100-gpu-cost/",
+        "content": "A new NVIDIA H100 GPU costs $25,000–$40,000 depending on variant (PCIe vs SXM5). Cloud rental runs $1.38–$8.00+ per GPU-hour on-demand, ...",
+        "refer": "ref_4"
+      },
+      {
+        "title": "How Much Does It Cost to Rent or Buy NVIDIA H100 GPUs ...",
+        "link": "https://www.gmicloud.ai/en/blog/how-much-does-it-cost-to-rent-or-buy-nvidia-h100-gpus-for-data-centers-in-2025",
+        "content": "NVIDIA H100 GPUs cost approximately $25,000-$40,000 to purchase per card, with complete 8-GPU server systems reaching $200,000-$400,000 ...",
+        "refer": "ref_5"
+      },
+      {
+        "title": "NVIDIA H100 Price 2026: $25K-40K, Plus H200/B200/B300",
+        "link": "https://intuitionlabs.ai/articles/nvidia-ai-gpu-pricing-guide",
+        "content": "the DGX Station (B300 + Grace CPU, tower form factor) lists at $80,000–$125,000 ([11]). Early cloud pricing ranges from $4.95–$18.00/GPU-hr, ...",
+        "refer": "ref_6"
+      },
+      {
+        "title": "What is the Nvidia DGX H100 Price? A Comprehensive ...",
+        "link": "https://go4hosting.in/knowledgebase/hosting/what-is-the-nvidia-dgx-h100-price-a-comprehensive-overview",
+        "content": "As of early 2025, the price for a single Nvidia DGX H100 system generally ranges between $300,000 and $600,000 USD, depending on configuration, vendor, region,",
+        "refer": "ref_7"
+      },
+      {
+        "title": "Pricing — NVIDIA Enterprise Licensing Guide",
+        "link": "https://docs.nvidia.com/ai-enterprise/planning-resource/licensing-guide/latest/pricing.html",
+        "content": "Subscription (Includes support2) 1 year $4,500 / GPU $1,125 / GPU 2 years $18,000 / GPU $4,500 / GPU 5 years1,4 $18,000. Perpetual 5 years ...",
+        "refer": "ref_8"
+      },
+      {
+        "title": "NVIDIA DGX H100 - Configure Online",
+        "link": "https://www.broadberry.com/xeon-scalable-processor-gen4-rackmount-servers/nvidia-dgx-h100?srsltid=AfmBOop0zOcap9MZEwMjD69rEqemv8tCylAoS2JDpvgdSvuVzjkaCtY0",
+        "content": "NVIDIA DGX H100 with 8x NVIDIA H100 Tensor Core GPUs, Dual Intel® Xeon® Platinum 8480C Processors, 2TB Memory, 2x 1.92TB NVMe M.2 & 8x 3.84TB NVMe U.2.",
+        "refer": "ref_9"
+      }
+    ],
+    "electricity": [
+      {
+        "title": "Philippines electricity prices, December 2025",
+        "link": "https://www.globalpetrolprices.com/Philippines/electricity_prices/",
+        "content": "The residential electricity price in the Philippines is PHP 13.318 per kWh or USD 0.218. The electricity price for businesses is PHP 9.846 kWh or USD 0.161.",
+        "refer": "ref_1"
+      },
+      {
+        "title": "LOWER MARKET PRICES FOR THE FIRST HALF OF 2025 ...",
+        "link": "https://www.iemop.ph/news/the-electricity-spot-market-at-work-lower-market-prices-for-the-first-half-of-2025/",
+        "content": "From an average of PhP5.58 per kilowatt-hour (kWh) in 2024, WESM prices decreased to PhP 4.14/kWh in the first half of 2025 — a 26% decline",
+        "refer": "ref_2"
+      },
+      {
+        "title": "Philippines",
+        "link": "https://www.global-climatescope.org/markets/philippines",
+        "content": "The average electricity price in the Philippines has decreased from ~$188/MWh in 2023 to ~$174/MWh in 2024. C&I (Commercial and Industrial) customer sign",
+        "refer": "ref_3"
+      },
+      {
+        "title": "The Philippines has the highest residential electricity prices ...",
+        "link": "https://www.facebook.com/abscbnNEWS/posts/the-philippines-has-the-highest-residential-electricity-prices-in-southeast-asia/1572182131623704/",
+        "content": "3.8-5.5 per kWh, costs of around ₱100,000 (US$1,700). commercial and industrial businesses, Philippines was highest in SEA after Singapore (USD ...",
+        "refer": "ref_4"
+      },
+      {
+        "title": "Electricity Rates Summary of the Month - Commercial",
+        "link": "https://staging.doe.gov.ph/site/epimb/articles/3323622--monthly-commercial-electricity-rates-for-december-2025?redirect=%252Farticles%252Fgroup%252Fstatistics-3%253Fcategory%253DElectric%2520Power%2520Industry--subcategory%253Dundefined--subject%253Dundefined--type%253Dundefined--display_type%253DCard--title%253DElectricity%2520Rates%2520Summary%2520of%2520the%2520Month%2520-%2520Commercial",
+        "content": "Electricity Rates Summary of the Month - Commercial. PHILIPPINES DEPARTMENT OF ENERGY Electric Power. THE PHILIPPINES",
+        "refer": "ref_5"
+      },
+      {
+        "title": "Higher Rates this July 2025 - Meralco",
+        "link": "https://company.meralco.com.ph/news-and-advisories/higher-rates-july-2025",
+        "content": "PHILIPPINES, 11 JULY. P0.8575 per kWh, an upward adjustment of P0.4883 per kWh—bringing. P12.6435 per kWh from P12.1552 per kWh in June.",
+        "refer": "ref_6"
+      },
+      {
+        "title": "Rates",
+        "link": "https://morepower.com.ph/monthly-rates/",
+        "content": "Rates Monthly MORE Power Generation Rates. Commercial 11.7958 10.7317 10.8131. AUG 2025 SEP 2025 OCT 2025 NOV 2025 DEC 2025. Commercial 9.6457 9.2830 9.3494 9. ...",
+        "refer": "ref_7"
+      },
+      {
+        "title": "Electricity Price in the Philippines",
+        "link": "https://www.intratec.us/solutions/energy-prices-markets/commodity/electricity-price-philippines",
+        "content": "In December 2025, the price for Electricity, whl, PH was approximately 8.64 PHP per kWh, indicating a 2% fall when compared to the value of the previous month.",
+        "refer": "ref_8"
+      },
+      {
+        "title": "Rates - Pampanga II Electric Cooperative ...",
+        "link": "https://pelco2.com/services/rates",
+        "content": "Computation of the generation charge for the billing month of DECEMBER 2025. Based on NOVEMBER 2025 generation cost. (a), (b), (c = b/a). 2025. Source. % to ...",
+        "refer": "ref_9"
+      }
+    ],
+    "bpo": [
+      {
+        "title": "Philippine BPO Industry Statistics and Trends (2026)",
+        "link": "https://www.offshore247.com.au/philippine-bpo-industry-statistics-and-trends-2026-market-size-growth-ai-impact-and-future-outlook/",
+        "content": "Industry employment reached approximately 1.9 million workers in 2025. The industry generated USD 38 billion in revenue during 2024.",
+        "refer": "ref_1"
+      },
+      {
+        "title": "🚀 THE FUTURE OF BPO IS BEING ...",
+        "link": "https://www.facebook.com/MicrosoftPhilippines/posts/-the-future-of-bpo-is-being-written-right-now-40b-in-export-revenues-2025-the-it/1328231459331394/",
+        "content": "... revenues in 2025, up by five percent from $38 billion in 2024. ... \"The overall impact of AI on the Philippine #BPO industry is transformative.",
+        "refer": "ref_2"
+      },
+      {
+        "title": "Top BPO Industry Statistics: 2026 Trends & Growth Analysis",
+        "link": "https://www.magellan-solutions.com/blog/whats-the-number-analysis-of-the-latest-statistics-of-the-bpo-industry/",
+        "content": "Philippine BPO industry will grow by 5.31% to $35.7 billion in 2026, from an estimated $33.9 billion in 2025 and $31.7 billion in 2024. ...",
+        "refer": "ref_3"
+      },
+      {
+        "title": "AI pressures mount on Philippines' multi billion dollar BPO ...",
+        "link": "https://www.linkedin.com/pulse/ai-pressures-mount-philippines-multi-billion-dollar-bpo-schuengel-lxcte",
+        "content": "An IMF working paper published in 2025 estimates that roughly one-third of Philippine employment is highly exposed to artificial intelligence ...",
+        "refer": "ref_4"
+      },
+      {
+        "title": "Mapping the BPO Landscape in 2025",
+        "link": "https://hecttor.ai/blog/global-bpo-market-2025",
+        "content": "Having registered $37.38 billion in revenue in 2024, the Philippines BPO sector is projected to reach $102.37 billion by 2034 at a CAGR of 10.50% and employ ...",
+        "refer": "ref_5"
+      },
+      {
+        "title": "The Continued Growth of BPO in the Philippines",
+        "link": "https://www.365outsource.com/information/continued-growth-bpo-philippines/",
+        "content": "With $38 billion in revenues and 1.82 million employees in 2024, the Philippine BPO … 1.82 million full-time employees (120,000 new jobs ...",
+        "refer": "ref_6"
+      },
+      {
+        "title": "The BPO industry is repositioning itself to highlight artificial ...",
+        "link": "https://www.facebook.com/ONENewsPH/posts/the-bpo-industry-is-repositioning-itself-to-highlight-artificial-intelligence-an/1531260902362589/",
+        "content": "BPO jobs could actually grow by 1.1 million from 2023 to 2028. $38 billion in revenues and a workforce of about 1.8 million Filipinos, both a ...",
+        "refer": "ref_7"
+      },
+      {
+        "title": "Growing AI adoption to impact revenues of Philippine BPO ...",
+        "link": "https://insiderph.com/growing-ai-adoption-to-impact-revenues-of-philippine-bpo-industry-bsp-report",
+        "content": "The BPO sector, a cornerstone of the Philippines' export revenue, is expected to grow at a slower rate in 2024 and 2025 “consistent with latest trend driven in ...",
+        "refer": "ref_8"
+      }
+    ],
+    "gpuaas_market": [
+      {
+        "title": "GPU as a Service Market Size, Share & Trends 2030",
+        "link": "https://www.marketsandmarkets.com/Market-Reports/gpu-as-a-service-market-153834402.html",
+        "content": "The global GPU as a Service market is expected to grow from USD 8.21 billion in 2025 to USD 26.62 billion by 2030 at a CAGR of 26.5% from 2025 to 2030.",
+        "refer": "ref_1"
+      },
+      {
+        "title": "GPU as a Service Market worth $26.62 billion by 2030",
+        "link": "https://finance.yahoo.com/news/gpu-market-worth-26-62-141500700.html",
+        "content": "The GPU as a Service market is expected to grow from USD 8.21 billion in 2025 and is estimated. Annual Growth Rate (CAGR) of 26.5% from 2025 to ...",
+        "refer": "ref_2"
+      },
+      {
+        "title": "GPU As A Service Market Size, Outlook & Industry Trends",
+        "link": "https://www.mordorintelligence.com/industry-reports/gpu-as-a-service-market",
+        "content": "The GPU as a service market size is expected to increase from USD 5.73 billion in 2025 to USD 7.38 billion in 2026 and reach USD 26.09 billion ...",
+        "refer": "ref_3"
+      },
+      {
+        "title": "Artificial Intelligence As A Service Market Report, 2025-2030",
+        "link": "https://www.grandviewresearch.com/industry-analysis/artificial-intelligence-as-a-service-market-report",
+        "content": "Artificial intelligence as a service market size was $16.1B in 2024 and is projected to grow from $31.1B in 2026 to $105.0B by 2030, at a CAGR of 36.1%",
+        "refer": "ref_4"
+      },
+      {
+        "title": "GPU as a Service Market Size, Share, Growth, Analysis, 2034",
+        "link": "https://straitsresearch.com/report/gpu-as-a-service-market",
+        "content": "The GPU as a service market size is projected to grow from $10.3 billion in 2026 to $61.8 billion by 2034, at a CAGR of 25.1% during the ...",
+        "refer": "ref_5"
+      },
+      {
+        "title": "Data Center GPU Market Size 2026-2030",
+        "link": "https://www.technavio.com/report/data-center-gpu-market-industry-analysis",
+        "content": "The Data Center GPU Market size is expected to grow by USD 125433.2 million from 2026-2030 expanding at a CAGR of 15.8% during the forecast period.",
+        "refer": "ref_6"
+      },
+      {
+        "title": "Data Center GPU Market Size, Share | CAGR of 26.1%",
+        "link": "https://market.us/report/data-center-gpu-market/",
+        "content": "GPU Market size is expected to be worth around USD 183 billion by 2034, from USD 18 billion in 2024, growing at a CAGR of 14.2% during the forecast period from ...",
+        "refer": "ref_7"
+      },
+      {
+        "title": "GPU-as-a-service (GPUaaS): worldwide forecast 2025–2030",
+        "link": "https://www.analysysmason.com/research/content/reports/gpuaas-worldwide-forecast-rma16/",
+        "content": "This report provides forecasts for service provider revenue from GPU-as-a-service (GPUaaS) offerings for 2025–2030. It provides details of revenue by service ...",
+        "refer": "ref_8"
+      },
+      {
+        "title": "GPU Market Set to Reach USD 352.55 Billion by 2030 ...",
+        "link": "https://www.linkedin.com/pulse/gpu-market-set-reach-usd-35255-billion-2030-driven-ai-kumar-gupta-wuhyc",
+        "content": "... (GPU) market is projected to grow from USD 82.68 billion in 2025 to USD 352.55 billion by 2030, reflecting a 33.65% CAGR. This growth is ...",
+        "refer": "ref_9"
+      }
+    ],
+    "sea_ai": [
+      {
+        "title": "Southeast Asia Data Center Market Size 2026-2030 - Technavio",
+        "link": "https://www.technavio.com/report/data-center-market-size-in-southeast-asia-industry-analysis",
+        "content": "Southeast Asia Data Center Market size is expected to grow by USD 4049.0 million from 2026-2030 expanding at a CAGR of 6.8% during the forecast period.",
+        "refer": "ref_1"
+      },
+      {
+        "title": "Asia-Pacific Artificial Intelligence (AI) Optimised Data Center Market ...",
+        "link": "https://www.mordorintelligence.com/industry-reports/asia-pacific-artificial-intelligence-ai-data-center-market",
+        "content": "The Asia-Pacific artificial intelligence data center market is valued at USD 9.59 billion in 2025 and, at a 22.69% CAGR, is forecast to reach ...",
+        "refer": "ref_2"
+      },
+      {
+        "title": "Southeast Asia cloud market to grow 18% by 2030 - LinkedIn",
+        "link": "https://www.linkedin.com/posts/lekconsulting_emerging-trends-in-southeast-asias-public-activity-7302873144770396161-ofi1",
+        "content": "The public cloud market in Southeast Asia is projected to grow from $6 billion today to $30 billion by 2030, with a CAGR of 18%. This growth ...",
+        "refer": "ref_3"
+      },
+      {
+        "title": "Asia Pacific Cloud Computing Market - MarketsandMarkets",
+        "link": "https://www.marketsandmarkets.com/Market-Reports/asia-pacific-cloud-computing-market-21379886.html",
+        "content": "The Asia Pacific cloud computing market is projected to grow from USD 348.75 billion in 2025 to USD 752.78 billion by 2030, at a CAGR of 16.6%.",
+        "refer": "ref_4"
+      },
+      {
+        "title": "Southeast Asia Cloud Computing Market Size, Share, 2034",
+        "link": "https://www.imarcgroup.com/southeast-asia-cloud-computing-market",
+        "content": "Southeast Asia cloud computing market size valued at USD 230.7 billion in 2025, is projected to reach USD 542.5 billion, CAGR of 9.67% during 2026-2034.",
+        "refer": "ref_5"
+      },
+      {
+        "title": "Artificial Intelligence - Southeast Asia | Market Forecast - Statista",
+        "link": "https://www.statista.com/outlook/tmo/artificial-intelligence/southeast-asia/?srsltid=AfmBOopQLnDgFF-FnKWdd5uCuqbRURfE2YNHmcxMhgQwlpLpAiGEP9m4",
+        "content": "Artificial Intelligence market in Southeast Asia is projected to reach a value of US$*****bn. It is expected to exhibit an annual growth rate ・ leading to a ...",
+        "refer": "ref_6"
+      },
+      {
+        "title": "Southeast Asia Cloud Gaming Market Size & Value - Outlook 2030",
+        "link": "https://www.marknteladvisors.com/research-library/southeast-asia-cloud-gaming-market.html",
+        "content": "Southeast Asia Cloud Gaming Market size to reach USD 698.22 million by 2030, along with a CAGR of 23.92% during the forecast period 2025-2030.",
+        "refer": "ref_7"
+      },
+      {
+        "title": "Southeast Asia Data Center Construction Market Size & Trends",
+        "link": "https://www.researchandmarkets.com/report/asia-pacific-data-center-construction-market?srsltid=AfmBOoo6WV1nza-N70H-WG2rW_2BDcSXziIltsuqtWbuTqNvOY1XEptU",
+        "content": "The Southeast Asian Data Center Construction Market, valued at USD 6.59B in 2025, is projected to reach USD 17.65B by 2031, growing at a 17.8% CAGR.",
+        "refer": "ref_8"
+      },
+      {
+        "title": "Southeast Asia's data center market to reach USD 30.47B by 2030",
+        "link": "https://www.linkedin.com/posts/usdctechnology_the-future-of-data-centers-in-southeast-asia-activity-7355065857137397760-JmXY",
+        "content": "Southeast Asia is becoming the next global data center hotspot. With the market projected to hit USD 30.47B by 2030 at a CAGR of 14.24%, ...",
+        "refer": "ref_9"
+      },
+      {
+        "title": "Southeast Asia Cloud Computing Market Size & Forecast, 2033",
+        "link": "https://univdatos.com/reports/southeast-asia-cloud-computing-market",
+        "content": "The Southeast Asia Cloud Computing Market was valued at ~USD 30,517.83 million in 2024 and is expected to grow at a strong CAGR of approximately 14.56% ...",
+        "refer": "ref_10"
+      }
+    ],
+    "pldt_financials": [
+      {
+        "title": "PLDT FULL YEAR 2025 RESULTS: Net service revenues ...",
+        "link": "https://www.facebook.com/pldt/posts/pldt-full-year-2025-results-net-service-revenues-rose-1-to-record-1962b-while-co/938989155154047/",
+        "content": "PLDT FULL YEAR 2025 RESULTS: Net service revenues rose 1% to record ₱196.2B, while consolidated EBITDA increased 3% to ₱111.2 billion.",
+        "refer": "ref_1"
+      },
+      {
+        "title": "PLDT Inc. reported record Net Service Revenues of P196.2 ...",
+        "link": "https://www.facebook.com/bncphl/posts/pldt-inc-reported-record-net-service-revenues-of-p1962-billion-in-2025-up-1-perc/122260513760354398/",
+        "content": "PLDT Inc. reported record Net Service Revenues of P196.2 billion in 2025, up 1 percent, as data and broadband growth offset declines in legacy ...",
+        "refer": "ref_2"
+      },
+      {
+        "title": "PLDT income eases 7%; data center REIT plan under study",
+        "link": "https://bworldonline.com/corporate/2026/02/27/733136/pldt-income-eases-7-data-center-reit-plan-under-study/",
+        "content": "Gross revenue in 2025 rose 1% to P218.39 billion from P216.83 billion the previous year. Service revenue accounted for P212.19 billion, while ...",
+        "refer": "ref_3"
+      },
+      {
+        "title": "PLDT 2025 results: revenue edges up, capex down | PHI ...",
+        "link": "https://www.stocktitan.net/sec-filings/PHI/6-k-pldt-inc-current-report-foreign-issuer-64880a40a580.html",
+        "content": "PLDT's 2025 Net Service Revenues hit ₱196.2B and EBITDA ₱111.2B, while net income slipped to ₱30.0B. Capex dropped to ₱60.3B, ...",
+        "refer": "ref_4"
+      },
+      {
+        "title": "PLDT consolidated gross service revenues rose 3% to ₱ ...",
+        "link": "https://doc.irasia.com/listco/hk/firstpacific/press/p250227a.pdf",
+        "content": "revenues of ₱83.5 billion in 2024, up by 2% year-on-year. ₱74.4 billion. Active data users grew to 41.3 million at the end of December 2024, up ...",
+        "refer": "ref_5"
+      },
+      {
+        "title": "6-K",
+        "link": "https://www.sec.gov/Archives/edgar/data/78150/000119312525275694/phi_6-k_3q2025.htm",
+        "content": "Our consolidated non-service revenues of Php4,380 million for the nine months ended September 30, 2025, decreased by Php1,567 million, or 26%, from Php5,947 ...",
+        "refer": "ref_6"
+      },
+      {
+        "title": "Press Release",
+        "link": "https://www.firstpacific.com/media/normal/17127_PLDT%25209M25%2520results.pdf",
+        "content": "ePLDT and its data center arm VITRO Inc. posted combined revenues of ₱4.88 billion, up 24% YoY, driven by sustained demand for colocation ...",
+        "refer": "ref_7"
+      },
+      {
+        "title": "Financial Results - PLDT",
+        "link": "https://main.pldt.com/investor-relations/financial-results",
+        "content": "Financial Highlights financialreports financialreports MD&A AND FINANCIAL STATEMENTS. FS Download 2025 + pdf-icon. FS Download 2024 + pdf-icon",
+        "refer": "ref_8"
+      },
+      {
+        "title": "𝐏𝐋𝐃𝐓 𝐩𝐨𝐬𝐭𝐬 𝐫𝐞𝐜𝐨𝐫𝐝 𝟐𝟎𝟐𝟓 𝐫𝐞𝐯𝐞𝐧𝐮𝐞𝐬, ...",
+        "link": "https://thevoicenewsweekly.com/%25F0%259D%2590%258F%25F0%259D%2590%258B%25F0%259D%2590%2583%25F0%259D%2590%2593-%25F0%259D%2590%25A9%25F0%259D%2590%25A8%25F0%259D%2590%25AC%25F0%259D%2590%25AD%25F0%259D%2590%25AC-%25F0%259D%2590%25AB%25F0%259D%2590%259E%25F0%259D%2590%259C%25F0%259D%2590%25A8%25F0%259D%2590%25AB%25F0%259D%2590%259D-%25F0%259D%259F%2590/",
+        "content": "Data and broadband revenues reached ₱166.5 billion, accounting for 85 percent of total net service revenues, compared to 84 percent in 2024.",
+        "refer": "ref_9"
+      }
+    ]
+  },
+  "extra": {}
+}

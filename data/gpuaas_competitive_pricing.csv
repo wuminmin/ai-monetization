@@ -1,0 +1,10 @@
+﻿供应商,GPU型号,按需_USD_per_hr,实例类型,数据来源,备注
+AWS,H100,6.88,p5.48xlarge,AWS pricing 2026,高溢价
+Azure,H100,12.29,ND H100 v5,Azure pricing 2026,最高价
+GCP,H100,3.67,A3,GCP pricing 2026,稳定
+CoreWeave,H100,2.49,官网,coreweave.com,专注AI云
+Lambda Labs,H100,2.69,官网,lambda.ai,透明定价
+Spheron,H100 PCIe,2.01,官网,spheron.network,最低价
+Vast.ai,H100,2.0,实时竞价,vast.ai,波动大
+Oracle,H100,3.0,OCI,oracle cloud,适中
+PLDT VITRO (估),H100,2.8,VITRO Sta.Rosa,估算,"已运营, 未公开GPU定价"

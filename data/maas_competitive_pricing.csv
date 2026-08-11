@@ -1,0 +1,12 @@
+﻿模型,供应商,输入$/M_tok,输出$/M_tok,参数量
+GPT-5,OpenAI,1.25,10.0,~1.8T (MoE)
+GPT-5 Mini,OpenAI,0.25,2.0,~400B (MoE)
+GPT-5 Nano,OpenAI,0.05,0.4,~100B
+Claude 4.5 Haiku,Anthropic,1.0,5.0,~200B
+Claude 4.6 Sonnet,Anthropic,3.0,15.0,~400B
+Gemini 2.5 Flash,Google,0.3,2.5,~500B (MoE)
+Gemini 2.5 Flash Lite,Google,0.1,0.4,~100B
+DeepSeek V4 Flash,DeepSeek,0.14,0.28,671B (MoE)
+DeepSeek V4 Pro,DeepSeek,0.63,1.26,671B (MoE)
+GLM-5.2 (Z.AI),Z.AI,0.76,2.42,~350B (MoE)
+Qwen 3.5 Flash,Qwen(阿里),0.065,0.26,~30B (MoE)
