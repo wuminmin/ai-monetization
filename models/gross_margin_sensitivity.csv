@@ -1,19 +1,36 @@
-﻿情景,负载,PUE,定价$/hr,保本价$/hr,毛利率,盈利
-优化,0.6,1.25,2.2,2.14,0.0276,⚠️
-优化,0.6,1.25,2.49,2.14,0.1408,✅
-优化,0.6,1.25,2.69,2.14,0.2047,✅
-优化,0.6,1.25,3.0,2.14,0.2869,✅
-优化,0.6,1.25,3.2,2.14,0.3315,✅✅
-优化,0.6,1.25,3.67,2.14,0.4171,✅✅
-基准,0.7,1.4,2.2,1.91,0.1315,✅
-基准,0.7,1.4,2.49,1.91,0.2326,✅
-基准,0.7,1.4,2.69,1.91,0.2897,✅
-基准,0.7,1.4,3.0,1.91,0.3631,✅✅
-基准,0.7,1.4,3.2,1.91,0.4029,✅✅
-基准,0.7,1.4,3.67,1.91,0.4793,✅✅
-压力,0.8,1.6,2.2,1.77,0.1974,✅
-压力,0.8,1.6,2.49,1.77,0.2909,✅
-压力,0.8,1.6,2.69,1.77,0.3436,✅✅
-压力,0.8,1.6,3.0,1.77,0.4114,✅✅
-压力,0.8,1.6,3.2,1.77,0.4482,✅✅
-压力,0.8,1.6,3.67,1.77,0.5189,✅✅
+﻿scenario,price_per_gpu_hr,break_even,contribution_margin,verdict
+Demand Down,1.5,3.86,-1.5739,loss
+Demand Down,2.0,3.86,-0.9304,loss
+Demand Down,2.69,3.86,-0.4352,loss
+Demand Down,3.2,3.86,-0.2065,loss
+Demand Down,3.99,3.86,0.0324,thin
+Demand Down,5.0,3.86,0.2278,ok
+Demand Down,6.16,3.86,0.3732,strong
+Baseline,1.5,2.28,-0.5218,loss
+Baseline,2.0,2.28,-0.1413,loss
+Baseline,2.69,2.28,0.1514,ok
+Baseline,3.2,2.28,0.2867,ok
+Baseline,3.99,2.28,0.4279,strong
+Baseline,5.0,2.28,0.5435,strong
+Baseline,6.16,2.28,0.6294,strong
+Demand Up,1.5,1.73,-0.1558,loss
+Demand Up,2.0,1.73,0.1332,ok
+Demand Up,2.69,1.73,0.3555,strong
+Demand Up,3.2,1.73,0.4582,strong
+Demand Up,3.99,1.73,0.5655,strong
+Demand Up,5.0,1.73,0.6533,strong
+Demand Up,6.16,1.73,0.7186,strong
+Energy Stress,1.5,2.45,-0.6301,loss
+Energy Stress,2.0,2.45,-0.2226,loss
+Energy Stress,2.69,2.45,0.091,thin
+Energy Stress,3.2,2.45,0.2359,ok
+Energy Stress,3.99,2.45,0.3872,strong
+Energy Stress,5.0,2.45,0.511,strong
+Energy Stress,6.16,2.45,0.6031,strong
+Reliability Stress,1.5,2.51,-0.672,loss
+Reliability Stress,2.0,2.51,-0.254,loss
+Reliability Stress,2.69,2.51,0.0677,thin
+Reliability Stress,3.2,2.51,0.2163,ok
+Reliability Stress,3.99,2.51,0.3714,strong
+Reliability Stress,5.0,2.51,0.4984,strong
+Reliability Stress,6.16,2.51,0.5929,strong

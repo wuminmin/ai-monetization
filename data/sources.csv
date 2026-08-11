@@ -1,35 +1,34 @@
 ﻿claim_id,metric,value,unit,scope,provider,source_url,published_at,accessed_at,source_type,confidence,notes
-GPU-01,H100 SXM 单卡采购价,30000,USD/card,global,NVIDIA distributor,nvidia.com,2026,2026-08-11,vendor,A,经销商报价区间 $25K-$30K
-GPU-02,DGX H100 整机价,300000,USD/node,global,NVIDIA,nvidia.com/dgx,2026,2026-08-11,vendor,A,含 8×GPU+CPU+网络
-GPU-03,H100 SXM 峰值功耗,700,W/GPU,global,NVIDIA datasheet,nvidia.com/h100,2026,2026-08-11,vendor,A,SXM5 最高 TDP
-GPU-04,DGX H100 节点峰值 IT 功耗,7.0,kW/node,global,NVIDIA datasheet + 实测估算,nvidia.com/dgx,2026,2026-08-11,vendor,B,8×GPU+CPU+内存+网络; 含非 GPU 组件
-GPU-05,DGX H100 节点空闲功耗,2.8,kW/node,global,估算 (~40% 峰值),,,2026-08-11,estimate,D,需实测验证
-POWER-01,PPA 电价,0.085,USD/kWh,Philippines,WESM 批发 + PPA 估算,wesm.philippines,2026,2026-08-11,regulator+estimate,C,"WESM ₱4.14/kWh→$0.075, PPA 加成→$0.085"
-POWER-02,商业零售电价,0.161,USD/kWh,Philippines,GlobalPetrolPrices,globalpetrolprices.com/Philippines,2026-Q2,2026-08-11,aggregator,C,
-MKT-01,全球 GPUaaS 市场,12.5→35,B USD,global 2026-2031,MarketsandMarkets,marketsandmarkets.com,2026,2026-08-11,research,B,CAGR auto-calc 22.9%
-MKT-02,菲律宾 DC 市场,0.766→1.97,B USD,Philippines 2026-2030,Mordor Intelligence,mordorintelligence.com,2026,2026-08-11,research,B,CAGR auto-calc 26.6%
-MKT-03,菲律宾 BPO 产业,38→102,B USD,Philippines 2026-2034,IBPAP,ibpap.org,2026,2026-08-11,industry,B,CAGR auto-calc 13.1%
-PLDT-01,VITRO 数据中心容量份额,65,%,Philippines,VITRO 官方 (2023 披露),vitrodc.com,2023,2026-08-11,vendor,A,"容量口径, 非收入份额"
-PLDT-02,VITRO 数据中心数量,11,count,Philippines,VITRO 官方,vitrodc.com,2026,2026-08-11,vendor,A,计划第 12 个
-PLDT-03,VITRO Sta. Rosa 容量,50,MW,Philippines,VITRO 官方,vitrodc.com,2026,2026-08-11,vendor,A,"独立项目, 非 100MW 扩建"
-PLDT-04,PLDT 计划新建 DC,100,MW min,Philippines,VITRO 官方 (第 12 个 DC),vitrodc.com,2026,2026-08-11,vendor,A,"第 12 个 DC, 与 Sta. Rosa 不同项目"
-PLDT-05,PLDT 总收入,196.2,B PHP,Philippines,PLDT 财报,pldt.com,2025,2026-08-11,filing,A,2025 财年
-PLDT-06,PLDT EBITDA,111.2,B PHP,Philippines,PLDT 财报,pldt.com,2025,2026-08-11,filing,A,2025 财年
-DSK-01,DeepSeek V4 Flash 总参数,284,B,model,OpenRouter API,openrouter.ai/deepseek/deepseek-v4-flash,2026-04,2026-08-11,model_card,A,
-DSK-02,DeepSeek V4 Flash 激活参数,13,B,model,OpenRouter API,openrouter.ai/deepseek/deepseek-v4-flash,2026-04,2026-08-11,model_card,A,
-DSK-03,DeepSeek V4 Pro 总参数,1.6,T,model,OpenRouter API,openrouter.ai/deepseek/deepseek-v4-pro,2026-04,2026-08-11,model_card,A,
-DSK-04,DeepSeek V4 Pro 激活参数,49,B,model,OpenRouter API,openrouter.ai/deepseek/deepseek-v4-pro,2026-04,2026-08-11,model_card,A,
-DSK-05,DeepSeek V4 Flash 定价,0.14/0.28,USD/M_in/out,API,DeepSeek / OpenRouter,openrouter.ai,2026-08,2026-08-11,vendor,A,
-DSK-06,DeepSeek V4 Pro 定价,0.63/1.26,USD/M_in/out,API,DeepSeek / OpenRouter,openrouter.ai,2026-08,2026-08-11,vendor,A,
-MOD-01,GPT-OSS 120B 总参数,117,B,model,OpenRouter API,openrouter.ai/openai/gpt-oss-120b,2026,2026-08-11,model_card,A,
-MOD-02,GPT-OSS 120B 激活参数,5.1,B,model,OpenRouter API,openrouter.ai/openai/gpt-oss-120b,2026,2026-08-11,model_card,A,INT4 可单卡
-MOD-03,Gemma 4 31B 参数,30.7,B dense,model,OpenRouter API,openrouter.ai/google/gemma-4-31b-it,2026,2026-08-11,model_card,A,BF16 权重 ~62GB
-AWS-01,AWS p5.48xlarge 价格,6.88,USD/hr/instance,us-east-1,AWS 官网,aws.amazon.com/ec2/pricing,2026-08,2026-08-11,vendor,A,8×H100 SXM 整机
-AZURE-01,Azure ND H100 v5 价格,12.29,USD/hr/instance,East US,Azure 官网,azure.microsoft.com/pricing,2026-08,2026-08-11,vendor,A,8×H100 SXM 整机
-GCP-01,GCP a3-highgpu-8g 价格,3.67,USD/hr/instance,us-central1,GCP 官网,cloud.google.com/compute/gpu-pricing,2026-08,2026-08-11,vendor,A,8×H100 SXM 整机
-CW-01,CoreWeave 8×H100 价格,2.49,USD/hr/instance,US-East,CoreWeave 官网,coreweave.com/pricing,2026-08,2026-08-11,vendor,A,8×H100 SXM
-LAMBDA-01,Lambda 8×H100 价格,2.69,USD/hr/instance,US multi,Lambda 官网,lambda.ai/pricing,2026-08,2026-08-11,vendor,A,8×H100 SXM
-SPH-01,Spheron H100 PCIe 价格,2.01,USD/hr/GPU,decentralized,Spheron 官网,spheron.network,2026-08,2026-08-11,vendor,B,"单卡 PCIe, 无 SLA"
-VAST-01,Vast.ai H100 价格,2.0,USD/hr/GPU,decentralized,Vast.ai 实时竞价,vast.ai/pricing,2026-08,2026-08-11,aggregator,C,"单卡, Spot/bid, 波动大"
-TCO-01,Tier-III DC 机架成本,1500,USD/GPU/yr,Philippines,估算,,,2026-08-11,estimate,D,需当地数据中心报价验证
-TCO-02,运维人力成本,600,USD/GPU/yr,Philippines,估算,,,2026-08-11,estimate,D,SRE 团队分摊
+GPU-01,H100 SXM purchase price,30000,USD/card,global,NVIDIA distributor,nvidia.com,2026,2026-08-11,vendor,D,Estimate from distributor range $25K-$30K; needs actual quote
+GPU-02,DGX H100 node price,300000,USD/node,global,NVIDIA,nvidia.com/dgx,2026,2026-08-11,vendor,A,
+GPU-03,H100 SXM max TDP,700,W/GPU,global,NVIDIA datasheet,docs.nvidia.com/dgx/dgxh100-user-guide,2026,2026-08-11,vendor,A,SXM5 max TDP
+GPU-04,DGX H100 nameplate max system power,10.2,kW/node,global,NVIDIA DGX datasheet,docs.nvidia.com/dgx/dgxh100-user-guide,2026,2026-08-11,vendor,A,Official max system power
+GPU-05,DGX H100 active power at ~50% MFU,7.0,kW/node,global,estimate,,,2026-08-11,estimate,D,Active power estimate at target MFU; needs PDU/BMC measurement
+GPU-06,DGX H100 idle power,2.8,kW/node,global,estimate,,,2026-08-11,estimate,D,~28% of nameplate; needs measurement
+GPU-CW-OD,CoreWeave HGX H100 on-demand,49.24,USD/instance-hr,US-East,CoreWeave official,https://www.coreweave.com/pricing,2026-08,2026-08-11,vendor,A,8xH100 SXM node; = $6.155/GPU/hr
+GPU-CW-SP,CoreWeave HGX H100 spot,19.71,USD/instance-hr,US-East,CoreWeave official,https://www.coreweave.com/pricing,2026-08,2026-08-11,vendor,A,8xH100 SXM spot; = $2.464/GPU/hr
+GPU-LAM-01,Lambda H100 SXM on-demand,3.99,USD/GPU-hr,US multi,Lambda official,https://lambda.ai/pricing,2026-08,2026-08-11,vendor,A,Per-GPU-hour; NOT instance price
+GPU-AWS-01,AWS p5.48xlarge Capacity Block,41.528,USD/instance-hr,us-east-1,AWS official,https://aws.amazon.com/ec2/capacityblocks/pricing/,2026-08,2026-08-11,vendor,A,"Capacity Block, not standard on-demand; = $5.191/GPU/hr"
+GPU-GCP-01,GCP a3-highgpu-8g DWS,38.32,USD/instance-hr,us-central1,GCP official,https://cloud.google.com/products/dws/pricing,2026-08,2026-08-11,vendor,A,"DWS scheduling, not standard on-demand; = $4.79/GPU/hr"
+GPU-ORC-01,Oracle BM.GPU.H100.8,10.0,USD/GPU-hr,us-ashburn-1,Oracle blog,https://blogs.oracle.com/cloud-infrastructure/now-ga-largest-ai-supercomputer-oci-nvidia-h200,2026-08,2026-08-11,vendor,A,Per-GPU-hour; 8-GPU BM = $80/hr
+POWER-01,PPA electricity rate,0.085,USD/kWh,Philippines,WESM + PPA estimate,wesm.philippines,2026,2026-08-11,regulator+estimate,C,"WESM ₱4.14/kWh → ~$0.075, PPA markup → $0.085"
+POWER-02,Commercial electricity rate,0.161,USD/kWh,Philippines,GlobalPetrolPrices,globalpetrolprices.com/Philippines,2026-Q2,2026-08-11,aggregator,C,
+MKT-01,Philippines DC market,0.85→2.37,B USD,Philippines 2026-2031,Mordor Intelligence,https://www.mordorintelligence.com/industry-reports/philippines-data-center-market,2026,2026-08-11,research,B,CAGR 22.8% (auto-calc)
+MKT-02,Philippines BPO revenue,40→50.5,B USD,Philippines 2026-2028,IBPAP,https://ibpap.org/news-room/43,2026,2026-08-11,industry,B,IBPAP 2028 outlook. Old $102B/2034 removed as unverified
+MKT-03,Global GPUaaS market,12.5→35,B USD,global 2026-2031,MarketsandMarkets,https://www.marketsandmarkets.com/Market-Reports/gpu-as-a-service-market-153803419.html,2026,2026-08-11,research,B,CAGR 22.9% (auto-calc)
+PLDT-01,VITRO DC capacity share,65,%,Philippines,VITRO official (2023),vitrodc.com,2023,2026-08-11,vendor,A,"CAPACITY share, not revenue share"
+PLDT-02,VITRO data centers,11,count,Philippines,VITRO official,vitrodc.com,2026,2026-08-11,vendor,A,12th planned
+PLDT-03,VITRO Sta. Rosa capacity,50,MW,Philippines,VITRO official,vitrodc.com,2026,2026-08-11,vendor,A,Separate project from new 100MW DC
+PLDT-04,PLDT planned new DC,100,MW min,Philippines,VITRO official,vitrodc.com,2026,2026-08-11,vendor,A,"12th DC, different from Sta. Rosa"
+PLDT-05,PLDT revenue,196.2,B PHP,Philippines,PLDT financials,pldt.com,2025,2026-08-11,filing,A,FY2025
+PLDT-06,PLDT EBITDA,111.2,B PHP,Philippines,PLDT financials,pldt.com,2025,2026-08-11,filing,A,FY2025
+DSK-01,DeepSeek V4 Flash total params,284,B,model,OpenRouter API,openrouter.ai/deepseek/deepseek-v4-flash,2026-04,2026-08-11,model_card,A,
+DSK-02,DeepSeek V4 Flash active params,13,B,model,OpenRouter API,openrouter.ai/deepseek/deepseek-v4-flash,2026-04,2026-08-11,model_card,A,
+DSK-03,DeepSeek V4 Pro total params,1.6,T,model,OpenRouter API,openrouter.ai/deepseek/deepseek-v4-pro,2026-04,2026-08-11,model_card,A,
+DSK-04,DeepSeek V4 Pro active params,49,B,model,OpenRouter API,openrouter.ai/deepseek/deepseek-v4-pro,2026-04,2026-08-11,model_card,A,
+DSK-05,DeepSeek V4 Flash price,0.14/0.28,USD/M_in/out,DeepSeek API,DeepSeek,api-docs.deepseek.com,2026-08,2026-08-11,vendor,A,
+DSK-06,DeepSeek V4 Pro price,0.63/1.26,USD/M_in/out,DeepSeek API,DeepSeek,api-docs.deepseek.com,2026-08,2026-08-11,vendor,A,
+QWEN-01,Qwen 3.5 Flash price,0.065/0.26,USD/M_in/out,Qwen API,Alibaba,dashscope.aliyun.com,2026-08,2026-08-11,vendor,A,
+GLM-01,GLM-5.2 price,0.76/2.42,USD/M_in/out,Z.AI API,Z.AI,docs.z.ai,2026-08,2026-08-11,vendor,A,
+TCO-01,Facility cost,1500,USD/GPU/yr,Philippines,estimate,,,2026-08-11,estimate,D,Needs local DC quote
+TCO-02,Ops cost,600,USD/GPU/yr,Philippines,estimate,,,2026-08-11,estimate,D,SRE team allocation

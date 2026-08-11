@@ -12,25 +12,55 @@ gpu:
   system_residual: 0.15
   unit_price_usd: 30000
 notes:
-- PUE 和空闲功耗为行业估算 (confidence D), 需当地数据中心实测
-- MaaS 吞吐量为估算值, 非 SLA goodput, 需 benchmark
-- 无收入预测 — 需确定投资预算后另行建模
+- TCO outputs are INFRASTRUCTURE CONTRIBUTION MARGIN, not full enterprise gross margin.
+- 'Missing costs: sales, support, bad debt, financing, import, spares, network fabric,
+  storage, SLA penalties.'
+- PUE, idle_power and active_power are estimates (confidence D) — need measured values.
+- MaaS throughput is estimate, not SLA goodput — needs benchmark.
+- No revenue forecast — requires confirmed investment budget.
 power:
+  active_power_kw_at_target_mfu: 7.0
   commercial_rate: 0.161
+  idle_power_kw: 2.8
   load_power_exponent: 0.8
-  node_idle_kw: 2.8
-  node_peak_kw: 7.0
+  nameplate_max_kw: 10.2
+  notes: idle_power and active_power are estimates (confidence D). Replace with PDU/BMC
+    telemetry.
+  power_measurement_source: estimate
   ppa_rate: 0.085
 scenarios:
   baseline:
-    avg_load: 0.7
+    availability: 0.99
+    billing_eff: 0.95
+    comm_util: 0.6
+    mfu: 0.5
     pue: 1.4
-    rate: 0.123
-  optimize:
-    avg_load: 0.6
-    pue: 1.25
-    rate: 0.085
-  stress:
-    avg_load: 0.8
+    rate: ppa
+  demand_down:
+    availability: 0.99
+    billing_eff: 0.95
+    comm_util: 0.35
+    mfu: 0.45
+    pue: 1.4
+    rate: ppa
+  demand_up:
+    availability: 0.99
+    billing_eff: 0.95
+    comm_util: 0.8
+    mfu: 0.55
+    pue: 1.4
+    rate: ppa
+  energy_stress:
+    availability: 0.99
+    billing_eff: 0.95
+    comm_util: 0.6
+    mfu: 0.5
     pue: 1.6
-    rate: 0.161
+    rate: commercial
+  reliability_stress:
+    availability: 0.95
+    billing_eff: 0.9
+    comm_util: 0.6
+    mfu: 0.5
+    pue: 1.4
+    rate: ppa

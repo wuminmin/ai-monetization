@@ -1,43 +1,71 @@
 # 变更日志
 
-## [2026-08-11] 全面重构
+## [2026-08-11 v3] Round 2 review corrections
 
-### P0 修正 (硬错误)
+### P0 — GPUaaS 价格单位错误修正 (8倍偏差)
 
-- **CAGR 重算**：市场数据 CAGR 改为公式自动计算，修正了手动填写的错误值
-  - 菲律宾 DC：21% → 26.6%（实际值）
-  - 菲律宾 BPO：10.5% → 13.1%
-  - 东南亚公有云：18% → 39.2%
-- **DeepSeek V4 参数修正**：
-  - Flash：671B → **284B 总参/13B 激活** (MoE)
-  - Pro：671B → **1.6T 总参/49B 激活** (MoE)
-- **PLDT 65% 口径修正**：从"市场份额"改为"数据中心容量份额"，明确不代表收入份额或 AI 算力可获取份额
-- **VITRO 容量修正**：50MW→100MW 改为两个独立项目（Sta. Rosa 50MW + 新建第 12 个 DC ≥100MW）
-- **TCO 重算**：加入服务器级 IT 功耗（7kW/节点 vs 原 0.7kW/GPU）和 PUE
-  - 保本价：$1.81 → $1.91/GPU/hr（基准情景）
-  - 毛利率：43% → 40.3%（$3.20/hr, 基准）
-- **GPUaaS 竞品口径修正**：增加 form_factor, gpu_count, pricing_type, SLA 列；区分整机实例和单卡市场
-  - 旧：AWS $6.88/GPU/hr（误将整机价当单卡价）
-  - 新：AWS $6.88/hr/8-GPU-instance = $0.86/GPU/hr
-- **MaaS 输入/输出分拆**：成本和定价按 input/output token 分开
-- **来源跟踪**：创建 sources.csv，34 条来源含 claim_id, URL, 时间, 可信度分级
+- **根因**：CoreWeave $2.49、AWS $6.88 等原始价格**本身就是 per-GPU 或 per-instance 价格**，但被统一当作 instance price 再除以 8，导致低估约 8 倍
+- **修正**：重建 `build_gpu_pricing.py`，引入 `raw_price_unit` 字段和 `normalize_price()` 函数
+  - CoreWeave on-demand: $0.31 → **$6.16/GPU/hr** (raw $49.24/instance-hr ÷ 8)
+  - Lambda: $0.34 → **$3.99/GPU/hr** (raw 已是 per-GPU-hr, 不再除)
+  - AWS (Cap Block): $0.86 → **$5.19/GPU/hr** (raw $41.53/instance-hr ÷ 8)
+  - GCP (DWS): $0.46 → **$4.79/GPU/hr** (raw $38.32/instance-hr ÷ 8)
+  - Oracle: $0.38 → **$10.00/GPU/hr** (raw 已是 per-GPU-hr)
+- Azure 移除——需通过 Retail Prices API 获取可验证价格
+- 新增 6 个官方价格 fixture 测试 (independent of production code)
 
-### 结构变更
+### P0 — TCO 利用率变量分离
 
-- 删除凭空编造的 5 年收入/毛利/CapEx/现金流预测（无投资预算依据）
-- 删除 run_analysis.py 及相关预测 CSV
-- 路线图改为 Stage-Gate 模式（每阶段有进入/退出条件）
-- 竞争优势表述改为审慎措辞（不再使用绝对化结论）
-- 中国转售附录重构为"跨区域算力溢出与灾备策略"
-- 新增 src/ 代码目录（可复现计算）
-- 新增 tests/ 测试目录（验证计算正确性）
-- 新增 methodology/ 方法学目录
-- 新增 README, CHANGELOG
+- **根因**：单一 `avg_load` 同时用于功耗估算、可计费小时和商业利用率, 导致"压力"情景保本价反更低
+- **修正**：分离为 4 个独立变量:
+  - `commercial_utilization` (商业销售利用率)
+  - `active_compute_mfu` (活跃计算 MFU, 驱动功耗)
+  - `service_availability` (服务可用率)
+  - `billing_efficiency` (计费效率)
+- 新增 5 个独立情景 (demand_down/baseline/demand_up/energy_stress/reliability_stress)
+- Baseline 保本价: $1.91 → **$2.28/GPU/hr**
+- 7kW 更名为 "active power at target MFU", nameplate max 改为 10.2kW (DGX datasheet)
 
-### 移除的内容
+### P0 — 市场数据来源修正
 
-- "所有数据均经过实时校准" 表述（实际部分数据来自搜索摘要而非一手来源）
-- "$68M 年收入""3 年 EBITDA 转正"等无依据结论
-- 2025 年基期的所有时间引用（统一到 2026）
-- Llama 3.1 系列（OpenRouter 排名非主流）
-- 过时竞品模型（GPT-4o, Claude 3.5, Gemini 1.5）
+- 移除 "东南亚公有云 $8B→$30B" (来源为 Technavio DC 报告, 指标不匹配)
+- 菲律宾 DC: $0.766B→$1.97B/2026-2030 → **$0.85B→$2.37B/2026-2031** (Mordor 原始年份)
+- BPO $102B/2034 移除 (未验证) → 替换为 IBPAP 2026-2028 $40B→$50.5B
+- 移除亚太 AI DC $11.8B (无可验证起止对)
+
+### P0 — Spot 价格与 TCO 一致性
+
+- 旧 Spot 建议 $1.50-2.00/GPU/hr 在 Baseline 情景下为亏损 (-52%~-14%)
+- 修正为: Spot 最低价 ≥ Baseline 保本价 $2.28/GPU/hr
+
+### P1 — MaaS 成本基础修正
+
+- GPU 成本从 break-even-at-util 改为 **active cost per GPU hour** ($2.28/hr)
+  - 区别于 calendar cost ($1.29/hr)
+- DeepSeek V4 Flash 理论 GM: 30% → **16%** (因成本基础修正)
+- GPT-OSS 内存公式修正: "117B×0.5B/8bit" → "117B × 4bit / 8 = 58.5GB, MXFP4"
+- 竞品价格表改为每 provider route 一行 (11 行, 不再合并)
+- 模型增加 revision 字段
+
+### P1 — 基础设施贡献毛利率
+
+- 所有 margin 统一更名为 **infrastructure contribution margin**
+- 明确标注不含销售/支持/坏账/融资/进口/备件/网络 Fabric/存储/SLA 赔偿
+
+### 工程
+
+- 新增 `.gitignore`, `pyproject.toml`
+- 新增 `src/validate_sources.py`
+- assumptions.yaml 成为单一事实来源 (TCO 从 YAML 加载)
+- 测试从 11 个增加到 15 个, 含官方价格 fixture
+
+## [2026-08-11 v2] Round 1 review corrections
+
+- CAGR 改为自动计算
+- DeepSeek V4 参数修正 (671B → 284B/13B Flash, 1.6T/49B Pro)
+- PLDT 65% 明确为容量份额
+- VITRO 50MW/100MW 拆分为独立项目
+- TCO 加入服务器级功耗 + PUE
+- GPU 竞品增加 form_factor/pricing_type
+- 删除凭空编造的收入预测
+- 新增 src/, tests/, methodology/, README, LICENSE, CHANGELOG

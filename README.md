@@ -4,44 +4,46 @@
 
 ## 状态
 
-> **初步可行性研究 (Draft)**。不作为董事会、投委会或真实采购决策的依据。
+> **Draft v3 — 初步可行性研究**。不作为董事会、投委会或真实采购决策的依据。
 
 ## 目录结构
 
 ```
 ai-monetization/
-├── README.md                    # 本文件
-├── LICENSE                      # 许可证
-├── CHANGELOG.md                 # 变更日志
+├── README.md
+├── LICENSE
+├── CHANGELOG.md
+├── pyproject.toml
+├── .gitignore
 │
 ├── methodology/
-│   ├── scope.md                 # 研究范围
-│   ├── source_policy.md         # 来源政策与可信度分级
-│   └── assumptions.yaml         # 可调参数
+│   ├── scope.md
+│   ├── source_policy.md
+│   └── assumptions.yaml         # 单一事实来源 (所有脚本从这里加载)
 │
 ├── src/
-│   ├── build_gpu_tco.py         # GPU TCO 计算 (服务器级功耗 + PUE)
-│   ├── build_maas_economics.py  # MaaS 单位经济
-│   ├── build_gpu_pricing.py     # GPUaaS 竞品标准化价格
+│   ├── build_gpu_tco.py         # GPU TCO (分离4个利用率变量)
+│   ├── build_maas_economics.py  # MaaS 单位经济 (理论敏感性)
+│   ├── build_gpu_pricing.py     # GPUaaS 竞品 (raw_price_unit + normalize_price)
 │   ├── build_market_model.py    # 市场数据 (CAGR 自动计算)
 │   └── validate_sources.py      # 来源验证
 │
 ├── tests/
-│   └── test_calculations.py     # 计算验证测试
+│   └── test_calculations.py     # 15项验证测试 (含官方价格fixture)
 │
 ├── data/
-│   ├── sources.csv              # 可追溯来源清单 (claim-level)
-│   ├── gpuaas_competitive_pricing.csv  # GPUaaS 竞品价格 (含规格)
-│   ├── maas_competitive_pricing.csv    # MaaS 竞品价格
-│   └── maas_token_economics.csv        # MaaS 单位经济
+│   ├── sources.csv              # 可追溯来源 (claim-level)
+│   ├── gpuaas_competitive_pricing.csv
+│   ├── maas_competitive_pricing.csv  # 每provider route一行
+│   └── maas_token_economics.csv
 │
 ├── models/
-│   ├── gpu_tco_breakdown.csv    # TCO 分解
-│   └── gross_margin_sensitivity.csv  # 毛利率敏感性
+│   ├── gpu_tco_breakdown.csv
+│   └── gross_margin_sensitivity.csv
 │
 └── reports/
-    ├── D_AI_Monetization_Strategy_V2.md  # 主报告
-    └── Resale_China_GPUaaS_Analysis.md   # 跨区域算力策略
+    ├── D_AI_Monetization_Strategy_V2.md
+    └── Resale_China_GPUaaS_Analysis.md
 ```
 
 ## 运行
@@ -53,28 +55,22 @@ python src/build_maas_economics.py
 python src/build_gpu_pricing.py
 python src/build_market_model.py
 
+# 验证来源
+python src/validate_sources.py
+
 # 运行测试
 python tests/test_calculations.py
 ```
 
-## 数据来源与可信度
+## 可信度分级
 
-每项关键数据在 `data/sources.csv` 中记录来源 URL、获取时间和可信度分级：
-
-- **A**: 厂商官方定价页、监管文件、财报、模型卡
-- **B**: 可靠研究机构完整报告
-- **C**: 媒体报道、搜索摘要
-- **D**: 内部估算或未验证假设
-- **E**: 纯假设
+A=厂商官方 | B=研究机构 | C=媒体/搜索摘要 | D=估算 | E=假设
 
 ## 已知限制
 
-- MaaS 吞吐量为估算值，非 SLA goodput，需 benchmark 验证
-- TCO 中 PUE 和空闲功耗为行业估算 (可信度 D)，需当地实测
-- 无收入/CapEx/现金流预测（需确定投资预算后另行建模）
-- 无 SOM 数值（需 bottom-up 容量约束模型）
-- 竞品价格为单次快照，无自动更新
-
-## 变更日志
-
-见 [CHANGELOG.md](CHANGELOG.md)。
+- GPUaaS 竞品价格为单次快照, AWS 用 Capacity Block, GCP 用 DWS (非标准按需)
+- TCO 中 PUE/空闲功耗/活跃功耗为估算 (可信度 D), 需 PDU/BMC 实测
+- MaaS 吞吐量为活跃状态估算, 非 SLA goodput, 需 benchmark
+- 所有毛利率为基础设施贡献毛利率, 非完整企业毛利率
+- 无收入/CapEx/现金流预测 (需确定投资预算)
+- Azure 竞品价格暂缺 (需 Retail Prices API)

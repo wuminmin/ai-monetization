@@ -1,114 +1,85 @@
 #!/usr/bin/env python3
 """
-Market Data — TAM/SAM/SOM
-按审阅意见修复：保留来源原始年份，CAGR 自动计算，SOM 独立计算
+Market Data — TAM/SAM
+CAGR auto-calculated. Sources verified per Round 2 review.
+Unverifiable entries removed.
 """
 
+import pandas as pd
 import math
 
 
 def calc_cagr(start_value, end_value, years):
-    """自动计算 CAGR"""
     return (end_value / start_value) ** (1 / years) - 1
 
 
-def assert_cagr(start, end, years, reported_cagr, tol=0.005):
-    """验证 CAGR 一致性"""
-    actual = calc_cagr(start, end, years)
-    assert abs(actual - reported_cagr) < tol, \
-        f"CAGR mismatch: reported {reported_cagr:.1%}, actual {actual:.1%}"
-
-
 # ============================================================
-# 市场数据 — 严格保留来源原始年份
+# Market data — only entries with verified source year + value + metric
 # ============================================================
 
 MARKET_DATA = [
     {
-        "claim_id": "M1",
-        "metric": "全球 GPUaaS (TAM)",
-        "start_value_b": 12.5,
-        "end_value_b": 35.0,
+        "claim_id": "MKT-01",
+        "metric": "Philippines Data Center Market",
+        "geography": "Philippines",
         "start_year": 2026,
+        "start_value_b": 0.85,
         "end_year": 2031,
-        "cagr": None,  # auto-calc
-        "source": "MarketsandMarkets GPUaaS Report",
-        "source_url": "https://www.marketsandmarkets.com/Market-Reports/gpu-as-a-service-market-153803419.html",
-        "source_type": "B",  # 研究机构报告
-        "accessed": "2026-08-11",
-        "confidence": "B",
-    },
-    {
-        "claim_id": "M2",
-        "metric": "亚太 AI 数据中心",
-        "start_value_b": 11.8,
-        "end_value_b": None,
-        "start_year": 2026,
-        "end_year": None,
-        "cagr": 0.227,
-        "source": "Asia-Pacific AI DC Report",
-        "source_url": None,
-        "source_type": "B",
-        "accessed": "2026-08-11",
-        "confidence": "C",
-    },
-    {
-        "claim_id": "M3",
-        "metric": "东南亚公有云",
-        "start_value_b": 8.0,
-        "end_value_b": 30.0,
-        "start_year": 2026,
-        "end_year": 2030,
-        "cagr": None,
-        "source": "Technavio / LinkedIn Industry Analysis",
-        "source_url": "https://www.technavio.com/report/data-center-market-size-in-southeast-asia",
-        "source_type": "B",
-        "accessed": "2026-08-11",
-        "confidence": "C",
-    },
-    {
-        "claim_id": "M4",
-        "metric": "菲律宾数据中心 (SAM 基准)",
-        "start_value_b": 0.766,
-        "end_value_b": 1.97,
-        "start_year": 2026,
-        "end_year": 2030,
-        "cagr": None,
-        "source": "Mordor Intelligence Philippines DC Report",
+        "end_value_b": 2.37,
+        "cagr": None,  # auto
+        "source_owner": "Mordor Intelligence",
         "source_url": "https://www.mordorintelligence.com/industry-reports/philippines-data-center-market",
-        "source_type": "B",
-        "accessed": "2026-08-11",
-        "confidence": "B",
+        "source_accessed": "2026-08-11",
+        "source_confidence": "B",
+        "normalization_method": "none",
+        "notes": "Source page states 2026 $0.85B, 2031 $2.37B, CAGR 22.88%",
     },
     {
-        "claim_id": "M5",
-        "metric": "菲律宾 BPO 产业",
-        "start_value_b": 38.0,
-        "end_value_b": 102.0,
+        "claim_id": "MKT-02",
+        "metric": "Philippines BPO Industry Revenue",
+        "geography": "Philippines",
         "start_year": 2026,
-        "end_year": 2034,
+        "start_value_b": 40.0,
+        "end_year": 2028,
+        "end_value_b": 50.5,
         "cagr": None,
-        "source": "IBPAP Industry Roadmap",
-        "source_url": "https://www.ibpap.org/research",
-        "source_type": "B",
-        "accessed": "2026-08-11",
-        "confidence": "B",
+        "source_owner": "IBPAP",
+        "source_url": "https://ibpap.org/news-room/43",
+        "source_accessed": "2026-08-11",
+        "source_confidence": "B",
+        "normalization_method": "none",
+        "notes": "IBPAP 2028 outlook: ~$43.3B-$50.5B. Previous $102B/2034 was unverified — REMOVED.",
     },
+    {
+        "claim_id": "MKT-03",
+        "metric": "Global GPUaaS Market (TAM reference)",
+        "geography": "Global",
+        "start_year": 2026,
+        "start_value_b": 12.5,
+        "end_year": 2031,
+        "end_value_b": 35.0,
+        "cagr": None,
+        "source_owner": "MarketsandMarkets",
+        "source_url": "https://www.marketsandmarkets.com/Market-Reports/gpu-as-a-service-market-153803419.html",
+        "source_accessed": "2026-08-11",
+        "source_confidence": "B",
+        "normalization_method": "none",
+        "notes": "MarketsandMarkets GPUaaS report. CAGR auto-calc ~22.9%",
+    },
+    # REMOVED entries:
+    # - "Southeast Asia Public Cloud $8B->$30B" — source was Technavio DC market report, not public cloud. Metric mismatch.
+    # - "Asia-Pacific AI Data Center $11.8B" — no verifiable start/end pair. Needs source verification.
+    # - "Philippines BPO $102B/2034" — no IBPAP or first-tier source found. Replaced with verified 2026-2028 outlook.
 ]
 
 
 def build_market_table():
-    """生成市场数据表，自动计算 CAGR"""
-    import pandas as pd
     rows = []
     for d in MARKET_DATA:
-        years = (d["end_year"] - d["start_year"]) if d["end_year"] else None
+        years = d["end_year"] - d["start_year"] if d["end_year"] else None
+        cagr = None
         if years and d["start_value_b"] and d["end_value_b"]:
             cagr = calc_cagr(d["start_value_b"], d["end_value_b"], years)
-        elif d["cagr"]:
-            cagr = d["cagr"]
-        else:
-            cagr = None
 
         size_str = f"${d['start_value_b']:.1f}B"
         if d["end_value_b"]:
@@ -116,45 +87,47 @@ def build_market_table():
 
         rows.append({
             "metric": d["metric"],
+            "geography": d["geography"],
             "size": size_str,
-            "period": f"{d['start_year']}-{d['end_year']}" if d['end_year'] else str(d['start_year']),
+            "period": f"{d['start_year']}-{d['end_year']}" if d["end_year"] else str(d["start_year"]),
             "cagr": f"{cagr:.1%}" if cagr else "N/A",
-            "source": d["source"],
-            "confidence": d["confidence"],
+            "source": d["source_owner"],
+            "confidence": d["source_confidence"],
+            "url": d["source_url"],
         })
     return pd.DataFrame(rows)
 
 
-# ============================================================
-# SOM 计算 — 独立 bottom-up
-# 注: 审阅指出 "不应直接用 市场规模 × PLDT市占率"
-# ============================================================
-
 def calc_som_note():
-    """SOM 说明"""
     return (
-        "SOM 需基于实际 GPU 容量、供电、上架节奏和已签合同做 bottom-up 计算。\n"
-        "本报告不提供 SOM 数值；PLDT 65% 为数据中心容量口径，不等于收入份额或 AI 算力可获取份额。"
+        "SOM requires bottom-up calculation from actual GPU capacity, power, "
+        "ramp schedule and signed contracts. PLDT 65% is data center CAPACITY share, "
+        "not revenue share or AI compute addressable share. This report does not provide a SOM figure."
     )
 
 
 if __name__ == "__main__":
-    import pandas as pd
     pd.set_option("display.width", 200)
 
     print("=" * 100)
-    print("  Market Data (TAM/SAM) — CAGR auto-calculated")
+    print("  Market Data (TAM/SAM) — Verified sources only")
     print("=" * 100)
 
     df = build_market_table()
     print(df.to_string(index=False))
 
-    print("\n--- CAGR 验证 ---")
+    print("\n--- CAGR verification ---")
     for d in MARKET_DATA:
         if d["end_value_b"] and d["start_value_b"]:
             years = d["end_year"] - d["start_year"]
             cagr = calc_cagr(d["start_value_b"], d["end_value_b"], years)
-            print(f"  {d['metric']}: {d['start_value_b']:.2f} -> {d['end_value_b']:.2f} over {years}y = {cagr:.1%}")
+            print(f"  {d['metric']}: ${d['start_value_b']:.2f}B -> ${d['end_value_b']:.2f}B over {years}y = {cagr:.1%}")
+
+    print("\n--- Removed entries (Round 2 review) ---")
+    print("  REMOVED: 'SE Asia Public Cloud $8B->$30B' — source was Technavio DC market, metric mismatch")
+    print("  REMOVED: 'Philippines DC $0.766B->$1.97B 2026-2030' — wrong year series; fixed to Mordor $0.85B->2.37B 2026-2031")
+    print("  REMOVED: 'Philippines BPO $102B/2034' — unverified; replaced with IBPAP 2026-2028 outlook")
+    print("  REMOVED: 'Asia-Pacific AI DC $11.8B' — no verifiable start/end pair")
 
     print(f"\n--- SOM ---")
     print(calc_som_note())
