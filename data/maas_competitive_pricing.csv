@@ -1,12 +1,8 @@
-﻿模型,供应商,输入$/M_tok,输出$/M_tok,参数量
-GPT-5,OpenAI,1.25,10.0,~1.8T (MoE)
-GPT-5 Mini,OpenAI,0.25,2.0,~400B (MoE)
-GPT-5 Nano,OpenAI,0.05,0.4,~100B
-Claude 4.5 Haiku,Anthropic,1.0,5.0,~200B
-Claude 4.6 Sonnet,Anthropic,3.0,15.0,~400B
-Gemini 2.5 Flash,Google,0.3,2.5,~500B (MoE)
-Gemini 2.5 Flash Lite,Google,0.1,0.4,~100B
-DeepSeek V4 Flash,DeepSeek,0.14,0.28,671B (MoE)
-DeepSeek V4 Pro,DeepSeek,0.63,1.26,671B (MoE)
-GLM-5.2 (Z.AI),Z.AI,0.76,2.42,~350B (MoE)
-Qwen 3.5 Flash,Qwen(阿里),0.065,0.26,~30B (MoE)
+﻿模型,供应商/Route,输入$/M_tok,输出$/M_tok,总参数,激活参数,架构
+DeepSeek V4 Flash,DeepSeek API direct / OpenRouter,0.14,0.28,284B,13B,MoE
+DeepSeek V4 Pro,DeepSeek API direct / OpenRouter,0.63,1.26,1.6T,49B,MoE
+Qwen 3.5 Flash,Qwen API / OpenRouter,0.065,0.26,~30B,~3B,MoE (线性注意力混合)
+Qwen 3.5 9B,Qwen API / OpenRouter,0.1,0.15,9B,9B (dense),Dense
+GPT-OSS 120B,OpenRouter,0.037,0.17,117B,5.1B,MoE
+Gemma 4 31B,OpenRouter / Google AI,0.1,0.34,30.7B,30.7B (dense),Dense
+GLM-5.2,Z.AI direct / OpenRouter,0.76,2.42,~350B,~32B,MoE (reasoning)

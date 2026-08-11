@@ -1,8 +1,8 @@
-﻿模型,GPU配置,聚合吞吐(tok/s),成本$/M_tok,竞品混合$/M,建议定价$/M,毛利率
-DeepSeek V4 Flash,8×H100,35000,0.114921,0.182,0.1729,0.335335
-Qwen 3.5 Flash,2×H100,28000,0.035913,0.1235,0.10497,0.657893
-Qwen 3.5 9B,1×H100,14000,0.035913,0.115,0.09775,0.632607
-Gemma 4 31B,1×H100,12000,0.041898,0.172,0.1462,0.713419
-DeepSeek V4 Pro,16×H100,22000,0.365657,0.819,0.5733,0.36219
-GLM-5.2 (Z.AI),8×H100,25000,0.160889,1.258,0.8806,0.817296
-GPT-OSS 120B,2×H100,20000,0.050278,0.0769,0.07305,0.311782
+﻿model,total_params,active_params,arch,context,gpu_config,precision,est_throughput_tps,cost_per_m,comp_in,comp_out,comp_provider,suggested_in,suggested_out,blended_gm,positioning
+DeepSeek V4 Flash,284B,13B,MoE,1M,8xH100,FP8,35000,0.1213,0.14,0.28,DeepSeek API direct / OpenRouter,0.133,0.266,0.2986,海量流量主力
+DeepSeek V4 Pro,1.6T,49B,MoE,1M,16xH100,FP8,22000,0.3859,0.63,1.26,DeepSeek API direct / OpenRouter,0.441,0.882,0.327,高质量推理
+Qwen 3.5 Flash,~30B,~3B,MoE (线性注意力混合),1M,1xH100,FP8,28000,0.0189,0.065,0.26,Qwen API / OpenRouter,0.0553,0.221,0.8195,轻量高吞吐
+Qwen 3.5 9B,9B,9B (dense),Dense,256K,1xH100,BF16,14000,0.0379,0.1,0.15,Qwen API / OpenRouter,0.085,0.1275,0.6123,开发者入门
+GPT-OSS 120B,117B,5.1B,MoE,128K,2xH100,"FP8 (单卡需 INT4, 117B*0.5B/8bit=58GB)",20000,0.0531,0.037,0.17,OpenRouter,0.0351,0.1615,0.2738,"OpenAI 开源, 生态兼容"
+Gemma 4 31B,30.7B,30.7B (dense),Dense,256K,1xH100,"BF16 (权重~62GB, KV Cache 空间有限)",12000,0.0442,0.1,0.34,OpenRouter / Google AI,0.085,0.289,0.6976,"Google 开源, 多语言"
+GLM-5.2,~350B,~32B,MoE (reasoning),1M,8xH100,FP8,25000,0.1698,0.76,2.42,Z.AI direct / OpenRouter,0.532,1.694,0.8072,高端企业级

@@ -1,10 +1,10 @@
-﻿供应商,GPU型号,按需_USD_per_hr,实例类型,数据来源,备注
-AWS,H100,6.88,p5.48xlarge,AWS pricing 2026,高溢价
-Azure,H100,12.29,ND H100 v5,Azure pricing 2026,最高价
-GCP,H100,3.67,A3,GCP pricing 2026,稳定
-CoreWeave,H100,2.49,官网,coreweave.com,专注AI云
-Lambda Labs,H100,2.69,官网,lambda.ai,透明定价
-Spheron,H100 PCIe,2.01,官网,spheron.network,最低价
-Vast.ai,H100,2.0,实时竞价,vast.ai,波动大
-Oracle,H100,3.0,OCI,oracle cloud,适中
-PLDT VITRO (估),H100,2.8,VITRO Sta.Rosa,估算,"已运营, 未公开GPU定价"
+﻿vendor,gpu_model,form_factor,gpu_count,instance,cpu,memory_gb,local_storage,network,instance_price_hr,per_gpu_hr,pricing_type,sla,region,source,accessed,confidence
+AWS,H100 SXM,SXM,8,p5.48xlarge,448 vCPU,"6,144",12.6TB,3.2Tbps EFA,6.88,0.86,on-demand,Enterprise SLA,us-east-1,aws.amazon.com/ec2/pricing,2026-08-11,A
+Azure,H100 SXM,SXM,8,ND H100 v5,96 vCPU,"1,920",17.6TB,3.2Tbps,12.29,1.54,on-demand,Enterprise SLA,East US,azure.microsoft.com/pricing,2026-08-11,A
+GCP,H100 SXM,SXM,8,a3-highgpu-8g,208 vCPU,"1,872",17.1TB,3.2Tbps,3.67,0.46,on-demand,Enterprise SLA,us-central1,cloud.google.com/compute/gpu-pricing,2026-08-11,A
+CoreWeave,H100 SXM,SXM,8,8x H100 server,192 vCPU,"2,048",15TB,InfiniBand,2.49,0.31,on-demand,Business SLA,US-East,coreweave.com/pricing,2026-08-11,A
+Lambda Labs,H100 SXM,SXM,8,8x H100 server,180 vCPU,"2,000",15TB,InfiniBand,2.69,0.34,on-demand,Business SLA,US multi-region,lambda.ai/pricing,2026-08-11,A
+Spheron,H100 PCIe,PCIe,1,single GPU,varies,80,varies,shared,2.01,2.01,market/spot,No SLA,decentralized,spheron.network,2026-08-11,B
+Vast.ai,H100,varies,1,single GPU,varies,80,varies,shared,2.0,2.0,spot/bid,No SLA,decentralized,vast.ai/pricing,2026-08-11,C
+Oracle,H100 SXM,SXM,8,BM.GPU.H100.8,128 OCPU,"2,048",29TB,RDMA,3.0,0.38,on-demand,Enterprise SLA,us-ashburn-1,oracle.com/cloud/compute,2026-08-11,A
+PLDT VITRO,H100 SXM,SXM,8,VITRO GPU node,TBD,TBD,TBD,PLDT backbone,,,TBD,TBD,"Manila, PH",internal estimate,2026-08-11,D

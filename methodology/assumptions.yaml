@@ -1,0 +1,36 @@
+fixed_costs_per_gpu_year:
+  facility: 1500
+  network: 400
+  ops: 600
+  software: 500
+gpu:
+  depreciation_years: 4
+  dgx_price_usd: 300000
+  gpu_residual: 0.2
+  gpus_per_node: 8
+  model: NVIDIA H100 SXM5
+  system_residual: 0.15
+  unit_price_usd: 30000
+notes:
+- PUE 和空闲功耗为行业估算 (confidence D), 需当地数据中心实测
+- MaaS 吞吐量为估算值, 非 SLA goodput, 需 benchmark
+- 无收入预测 — 需确定投资预算后另行建模
+power:
+  commercial_rate: 0.161
+  load_power_exponent: 0.8
+  node_idle_kw: 2.8
+  node_peak_kw: 7.0
+  ppa_rate: 0.085
+scenarios:
+  baseline:
+    avg_load: 0.7
+    pue: 1.4
+    rate: 0.123
+  optimize:
+    avg_load: 0.6
+    pue: 1.25
+    rate: 0.085
+  stress:
+    avg_load: 0.8
+    pue: 1.6
+    rate: 0.161
