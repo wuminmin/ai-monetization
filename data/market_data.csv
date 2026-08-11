@@ -1,4 +1,4 @@
-﻿metric,geography,size,period,cagr,source,confidence
-Philippines Data Center Market,Philippines,$0.8B -> $2.4B,2026-2031,0.22762545229784337,Mordor Intelligence,B
-Philippines BPO Industry Revenue,Philippines,$40.3B -> $43.3B-$50.5B,2025-2028,2.4%-7.8%,IBPAP,B
-Global GPUaaS Market (TAM reference),Global,$12.5B -> $35.0B,2026-2031,0.22865967908314722,MarketsandMarkets,B
+﻿metric,geography,size,period,cagr,cagr_basis,source,confidence
+Philippines BPO Industry Revenue,Philippines,"$40.3B (2025 actual), $42.3B (2026 fcst) -> $43.3B-$50.5B (2028)",2025-2028,2.4%-7.8% (2025 base) / 1.2%-9.3% (2026 base),2025 actual & 2026 forecast -> 2028 downside/upside,IBPAP,B
+Philippines Data Center Market,Philippines,$0.85B -> $2.37B,2026-2031,0.22762545229784337,2026 -> 2031,Mordor Intelligence,B
+Global GPUaaS Market (industry context only),Global,$8.21B -> $26.62B,2025-2030,0.26524019028714707,2025 -> 2030,MarketsandMarkets,B

@@ -74,11 +74,11 @@ def test_provider_routes_unique():
 
 
 def test_glm_price_corrected():
-    """GLM-5.2 must NOT be $0.76/$2.42."""
+    """GLM-5.2 OpenRouter price must exactly match live snapshot ($0.4886/$1.536)."""
     df = pd.read_csv(os.path.join(os.path.dirname(__file__), "..", "data", "maas_competitive_pricing.csv"))
     glm = df[df["model"] == "GLM-5.2"].iloc[0]
-    assert glm["in_per_m"] < 0.6, f"GLM input price ${glm['in_per_m']} — old $0.76 was wrong"
-    assert glm["out_per_m"] < 2.0, f"GLM output price ${glm['out_per_m']} — old $2.42 was wrong"
+    assert abs(glm["in_per_m"] - 0.4886) < 1e-6, f"GLM input ${glm['in_per_m']} != 0.4886"
+    assert abs(glm["out_per_m"] - 1.536) < 1e-6, f"GLM output ${glm['out_per_m']} != 1.536"
     print(f"PASS: test_glm_price_corrected (${glm['in_per_m']:.4f}/${glm['out_per_m']:.4f})")
 
 
@@ -98,6 +98,10 @@ def test_bpo_is_scenario_range():
     assert len(bpo) == 1
     size = bpo.iloc[0]["size"]
     assert "-" in size or "downside" in size.lower(), f"BPO should be a range: {size}"
+    # CAGR must label its base year explicitly (2025 and 2026)
+    cagr = bpo.iloc[0]["cagr"]
+    assert "2025 base" in cagr, f"BPO CAGR must label 2025 base: {cagr}"
+    assert "2026 base" in cagr, f"BPO CAGR must label 2026 base: {cagr}"
     print(f"PASS: test_bpo_is_scenario_range ({size})")
 
 
@@ -175,6 +179,117 @@ def test_no_fabricated_revenue():
     print(f"PASS: test_no_fabricated_revenue")
 
 
+# ============================================================
+# Round 4 tests — determinism, dual-base CAGR, live data fidelity,
+# DGX downgrade, snapshot/fixture consistency.
+# ============================================================
+
+def test_build_metadata_no_wallclock():
+    """Tracked manifest must NOT contain wall-clock time (only SOURCE_DATE_EPOCH)."""
+    import json
+    meta_path = os.path.join(os.path.dirname(__file__), "..", "models", "build_metadata.json")
+    with open(meta_path) as f:
+        meta = json.load(f)
+    # generated_at must come from SOURCE_DATE_EPOCH, not datetime.now()
+    assert "generated_at" in meta
+    assert "source_date_epoch" in meta, "manifest must record source_date_epoch"
+    # generator_code_hash must be present (proves determinism wiring)
+    assert meta.get("generator_code_hash"), "manifest missing generator_code_hash"
+    # No build_wall_clock field in the tracked manifest (that lives in build/runtime_metadata.json)
+    assert "build_wall_clock" not in meta, "tracked manifest must not contain wall-clock time"
+    print(f"PASS: test_build_metadata_no_wallclock")
+
+
+def test_bpo_dual_cagr_periods():
+    """BPO long-table must yield BOTH 2025->2028 and 2026->2028 CAGRs."""
+    from build_market_model import load_bpo_snapshot, calc_cagr
+    bpo = load_bpo_snapshot()
+    actual = bpo[bpo["scenario"] == "actual"].iloc[0]
+    fcst = bpo[bpo["scenario"] == "base_forecast"].iloc[0]
+    down = bpo[bpo["scenario"] == "downside"].iloc[0]
+    up = bpo[bpo["scenario"] == "upside"].iloc[0]
+    # 2025 -> 2028
+    yrs25 = int(down["year"]) - int(actual["year"])
+    c25d = calc_cagr(actual["value_usd_b"], down["value_usd_b"], yrs25)
+    c25u = calc_cagr(actual["value_usd_b"], up["value_usd_b"], yrs25)
+    assert 0.02 < c25d < 0.03, f"2025->2028 downside CAGR {c25d:.1%} not ~2.4%"
+    assert 0.07 < c25u < 0.08, f"2025->2028 upside CAGR {c25u:.1%} not ~7.8%"
+    # 2026 -> 2028
+    yrs26 = int(down["year"]) - int(fcst["year"])
+    c26d = calc_cagr(fcst["value_usd_b"], down["value_usd_b"], yrs26)
+    c26u = calc_cagr(fcst["value_usd_b"], up["value_usd_b"], yrs26)
+    assert 0.01 < c26d < 0.02, f"2026->2028 downside CAGR {c26d:.1%} not ~1.2%"
+    assert 0.09 < c26u < 0.10, f"2026->2028 upside CAGR {c26u:.1%} not ~9.3%"
+    print(f"PASS: test_bpo_dual_cagr_periods (2025: {c25d:.1%}-{c25u:.1%}, 2026: {c26d:.1%}-{c26u:.1%})")
+
+
+def test_global_gpuaas_matches_live_snapshot():
+    """Global GPUaaS must match MarketsandMarkets live data: $8.21B(2025)->$26.62B(2030), 26.5%."""
+    from build_market_model import MARKET_DATA
+    gpuaas = [d for d in MARKET_DATA if "GPUaaS" in d["metric"]][0]
+    assert gpuaas["start_value_b"] == 8.21, f"start {gpuaas['start_value_b']} != 8.21"
+    assert gpuaas["end_value_b"] == 26.62, f"end {gpuaas['end_value_b']} != 26.62"
+    assert gpuaas["start_year"] == 2025 and gpuaas["end_year"] == 2030
+    assert "153834402" in gpuaas["source_url"], f"URL must be the 153834402 page: {gpuaas['source_url']}"
+    # CAGR check
+    from build_market_model import calc_cagr
+    cagr = calc_cagr(8.21, 26.62, 2030 - 2025)
+    assert abs(cagr - 0.265) < 0.005, f"CAGR {cagr:.1%} not ~26.5%"
+    print(f"PASS: test_global_gpuaas_matches_live_snapshot ($8.21B->$26.62B, {cagr:.1%})")
+
+
+def test_maas_prices_match_snapshot():
+    """MaaS prices in CSV must exactly match the live snapshot fixture (2026-08-12)."""
+    prod = pd.read_csv(os.path.join(os.path.dirname(__file__), "..", "data", "maas_competitive_pricing.csv"))
+    fix = pd.read_csv(os.path.join(FIXTURES, "maas_price_snapshots.csv"))
+    # Merge on route_id and compare in/out prices + promotion exactly
+    merged = prod.merge(fix, on="route_id", suffixes=("_prod", "_fix"))
+    assert len(merged) == len(fix), f"route count mismatch: prod {len(prod)} vs fixture {len(fix)}"
+    for _, r in merged.iterrows():
+        assert abs(r["in_per_m_prod"] - r["in_per_m_fix"]) < 1e-9, \
+            f"{r['route_id']}: input {r['in_per_m_prod']} != fixture {r['in_per_m_fix']}"
+        assert abs(r["out_per_m_prod"] - r["out_per_m_fix"]) < 1e-9, \
+            f"{r['route_id']}: output {r['out_per_m_prod']} != fixture {r['out_per_m_fix']}"
+        assert bool(r["promotion_prod"]) == bool(r["promotion_fix"]), \
+            f"{r['route_id']}: promotion {r['promotion_prod']} != fixture {r['promotion_fix']}"
+    print(f"PASS: test_maas_prices_match_snapshot ({len(merged)} routes exact-match fixture)")
+
+
+def test_maas_snapshot_has_governance_fields():
+    """MaaS snapshot must carry observed_at, content_hash, promotion for audit."""
+    snaps = pd.read_csv(os.path.join(os.path.dirname(__file__), "..", "data", "pricing_snapshots", "maas_openrouter.csv"))
+    for col in ["observed_at", "content_hash", "promotion", "route_id", "source_url"]:
+        assert col in snaps.columns, f"snapshot missing governance column: {col}"
+    assert snaps["observed_at"].notna().all(), "observed_at must be present on all rows"
+    assert snaps["content_hash"].notna().all(), "content_hash must be present on all rows"
+    assert (snaps["observed_at"] == "2026-08-12").all(), "snapshot must be dated 2026-08-12"
+    print(f"PASS: test_maas_snapshot_has_governance_fields ({len(snaps)} rows)")
+
+
+def test_dgx_node_price_is_confidence_d():
+    """DGX H100 $300k node price must be downgraded to confidence D (no A-grade source)."""
+    df = pd.read_csv(os.path.join(os.path.dirname(__file__), "..", "data", "sources.csv"))
+    gpu02 = df[df["claim_id"] == "GPU-02"].iloc[0]
+    assert gpu02["confidence"] == "D", f"GPU-02 confidence {gpu02['confidence']} != D"
+    assert gpu02["source_type"] == "internal_estimate", \
+        f"GPU-02 source_type {gpu02['source_type']} != internal_estimate"
+    print(f"PASS: test_dgx_node_price_is_confidence_d (source_type={gpu02['source_type']})")
+
+
+def test_node_price_sensitivity_exists():
+    """Node-price sensitivity CSV must exist and show break-even rises with node price."""
+    df = pd.read_csv(os.path.join(os.path.dirname(__file__), "..", "models", "gpu_node_price_sensitivity.csv"))
+    baseline = df[df["scenario"] == "Baseline"].sort_values("node_price_usd")
+    # Break-even must be monotonically increasing with node price
+    bes = baseline["break_even_per_gpu_hr"].tolist()
+    assert all(bes[i] < bes[i + 1] for i in range(len(bes) - 1)), \
+        "break-even must increase with node price"
+    # Delta per $100k should be ~$0.54/GPU-hr (review's sensitivity figure)
+    d = baseline[baseline["node_price_usd"] == 400000]["delta_vs_baseline"].iloc[0]
+    assert 0.45 < d < 0.65, f"+$100k delta {d} not ~$0.54/GPU-hr"
+    print(f"PASS: test_node_price_sensitivity_exists (+$100k -> +${d}/GPU-hr)")
+
+
 if __name__ == "__main__":
     test_official_price_normalization()
     test_coreweave_not_understated()
@@ -192,4 +307,12 @@ if __name__ == "__main__":
     test_assumptions_loaded_from_yaml()
     test_build_metadata_exists()
     test_no_fabricated_revenue()
-    print("\n=== ALL 16 TESTS PASSED ===")
+    # Round 4
+    test_build_metadata_no_wallclock()
+    test_bpo_dual_cagr_periods()
+    test_global_gpuaas_matches_live_snapshot()
+    test_maas_prices_match_snapshot()
+    test_maas_snapshot_has_governance_fields()
+    test_dgx_node_price_is_confidence_d()
+    test_node_price_sensitivity_exists()
+    print("\n=== ALL 23 TESTS PASSED ===")

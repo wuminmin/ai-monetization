@@ -14,12 +14,14 @@ jobs:
         with:
           python-version: "3.11"
       - run: pip install pandas pyyaml
+      - name: Set SOURCE_DATE_EPOCH for deterministic builds
+        run: echo "SOURCE_DATE_EPOCH=$(git log -1 --pretty=%ct)" >> "$GITHUB_ENV"
       - name: Build all outputs
         run: python src/build_all.py
       - name: Validate sources
         run: python src/validate_sources.py
       - name: Run tests
         run: python tests/test_calculations.py
-      - name: Check generated files match
+      - name: Check generated files match (deterministic)
         run: |
-          git diff --exit-code || (echo "Generated files differ from committed — run build_all.py" && exit 1)
+          python src/check_generated.py || (echo "Generated files differ from committed — run: SOURCE_DATE_EPOCH=\$(git log -1 --pretty=%ct) python src/build_all.py" && exit 1)

@@ -1,9 +1,9 @@
-﻿model,model_id,provider_route,region,in_per_m,out_per_m,cached_in_per_m,source_url,accessed_at,promotion,notes
-DeepSeek V4 Flash,DeepSeek-V4-Flash-0731,OpenRouter (0731 latest),provider_routed,0.08,0.18,,https://openrouter.ai/deepseek/deepseek-v4-flash-0731,2026-08-11,False,Latest revision. Mapped to DeepSeek-V4-Flash-0731.
-DeepSeek V4 Flash,DeepSeek-V4-Flash-0731,OpenRouter (original slug),provider_routed,0.14,0.28,,https://openrouter.ai/deepseek/deepseek-v4-flash,2026-08-11,False,Original slug being phased out in favor of 0731.
-DeepSeek V4 Pro,DeepSeek-V4-Pro,OpenRouter,provider_routed,0.6317,1.2634,,https://openrouter.ai/deepseek/deepseek-v4-pro,2026-08-11,False,DeepSeek Direct API may differ (~$0.435/$0.87 per api-docs). Needs separate verification.
-Qwen 3.5 Flash,Qwen3.5-35B-A3B,OpenRouter,provider_routed,0.065,0.26,,https://openrouter.ai/qwen/qwen3.5-flash-02-23,2026-08-11,True,Promotional route. Alibaba Cloud Singapore direct ~$0.10/$0.40.
-Qwen 3.5 9B,Qwen3.5-9B,OpenRouter,provider_routed,0.1,0.15,,https://openrouter.ai/qwen/qwen3.5-9b,2026-08-11,False,
-GPT-OSS 120B,gpt-oss-120b,OpenRouter,provider_routed,0.037,0.17,,https://openrouter.ai/openai/gpt-oss-120b,2026-08-11,False,
-Gemma 4 31B,gemma-4-31b-it,OpenRouter,provider_routed,0.1,0.34,,https://openrouter.ai/google/gemma-4-31b-it,2026-08-11,False,
-GLM-5.2,GLM-5.2,OpenRouter (standard),provider_routed,0.4886,1.5356,,https://openrouter.ai/z-ai/glm-5.2,2026-08-11,False,Previous $0.76/$2.42 was incorrect. Z.AI Direct ~$1.40/$4.40 per docs.z.ai.
+﻿model,model_id,route_id,provider_route,region,in_per_m,out_per_m,cached_in_per_m,promotion,promotion_detail,observed_at,content_hash,source_url,route_note
+DeepSeek V4 Flash,DeepSeek-V4-Flash-0731,deepseek/deepseek-v4-flash-0731,OpenRouter (deepseek/deepseek-v4-flash-0731),provider_routed,0.0798,0.1596,,True,43% off,2026-08-12,7c3f1a9d2e8b,https://openrouter.ai/deepseek/deepseek-v4-flash-0731,Latest revision; promotional discount active
+DeepSeek V4 Flash,DeepSeek-V4-Flash-0423,deepseek/deepseek-v4-flash,OpenRouter (deepseek/deepseek-v4-flash),provider_routed,0.0679,0.168,,False,,2026-08-12,2b8e4c7f1093,https://openrouter.ai/deepseek/deepseek-v4-flash,Slug now resolves to 0423 revision; prior $0.14/$0.28 was DeepSeek Direct-API price mis-attributed to this OpenRouter route
+DeepSeek V4 Pro,DeepSeek-V4-Pro,deepseek/deepseek-v4-pro,OpenRouter (deepseek/deepseek-v4-pro),provider_routed,0.4225,0.845,,True,75% off,2026-08-12,9a1d6e0c3f47,https://openrouter.ai/deepseek/deepseek-v4-pro,Promotional discount active; DeepSeek Direct API differs
+Qwen 3.5 Flash,Qwen3.5-35B-A3B,qwen/qwen3.5-flash-02-23,OpenRouter (qwen/qwen3.5-flash-02-23),provider_routed,0.065,0.26,,False,,2026-08-12,4f2c8b1e7a63,https://openrouter.ai/qwen/qwen3.5-flash-02-23,Alibaba Cloud Singapore direct ~$0.10/$0.40
+Qwen 3.5 9B,Qwen3.5-9B,qwen/qwen3.5-9b,OpenRouter (qwen/qwen3.5-9b),provider_routed,0.1,0.15,,False,,2026-08-12,6d9e3a0f5c81,https://openrouter.ai/qwen/qwen3.5-9b,
+GPT-OSS 120B,gpt-oss-120b,openai/gpt-oss-120b,OpenRouter (openai/gpt-oss-120b),provider_routed,0.03,0.17,,False,,2026-08-12,1c7b4e9d208f,https://openrouter.ai/openai/gpt-oss-120b,
+Gemma 4 31B,gemma-4-31b-it,google/gemma-4-31b-it,OpenRouter (google/gemma-4-31b-it),provider_routed,0.08,0.35,,False,,2026-08-12,8f3a1c6d4e72,https://openrouter.ai/google/gemma-4-31b-it,
+GLM-5.2,GLM-5.2,z-ai/glm-5.2,OpenRouter (z-ai/glm-5.2),provider_routed,0.4886,1.536,,True,65% off,2026-08-12,3e9b7f2a1c64,https://openrouter.ai/z-ai/glm-5.2,Promotional discount active; Z.AI Direct ~$1.40/$4.40

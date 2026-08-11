@@ -1,6 +1,6 @@
 ﻿claim_id,metric,value,unit,scope,provider,source_url,published_at,accessed_at,source_type,confidence,notes
 GPU-01,H100 SXM purchase price,30000,USD/card,global,NVIDIA distributor,,,2026-08-11,vendor,D,Estimate; needs actual quote
-GPU-02,DGX H100 node price,300000,USD/node,global,NVIDIA,https://docs.nvidia.com/dgx/dgxh100-user-guide/introduction-to-dgxh100.html,2026,2026-08-11,vendor,A,
+GPU-02,DGX H100 node price,300000,USD/node,global,NVIDIA,https://docs.nvidia.com/dgx/dgxh100-user-guide/introduction-to-dgxh100.html,2026,2026-08-12,internal_estimate,D,"Internal estimate; awaiting vendor quote. NVIDIA DGX user guide specifies hardware specs only, NOT purchase price."
 GPU-03,DGX H100 nameplate max power,10.2,kW/node,global,NVIDIA DGX datasheet,https://docs.nvidia.com/dgx/dgxh100-user-guide/introduction-to-dgxh100.html,2026,2026-08-11,vendor,A,Official max system power
 GPU-04,DGX H100 active power @ ~50% MFU,7.0,kW/node,global,estimate,,,2026-08-11,estimate,D,Needs PDU/BMC measurement
 GPU-05,DGX H100 idle power,2.8,kW/node,global,estimate,,,2026-08-11,estimate,D,~28% of nameplate
@@ -12,22 +12,23 @@ GPU-GCP-01,GCP a3-highgpu-8g DWS,38.32,USD/instance-hr,us-central1,GCP official,
 GPU-ORC-01,Oracle BM.GPU.H100.8,10.0,USD/GPU-hr,us-ashburn-1,Oracle blog,https://blogs.oracle.com/cloud-infrastructure/now-ga-largest-ai-supercomputer-oci-nvidia-h200,2026-08,2026-08-11,vendor,A,Per-GPU-hr; BM = $80/hr
 POWER-01,PPA electricity rate,0.085,USD/kWh,Philippines,WESM + PPA estimate,,2026,2026-08-11,estimate,D,WESM ₱4.14/kWh
 POWER-02,Commercial electricity rate,0.161,USD/kWh,Philippines,GlobalPetrolPrices,https://www.globalpetrolprices.com/Philippines/electricity_prices/,2026-Q2,2026-08-11,aggregator,C,
-MKT-01,Philippines DC market,0.85→2.37,B USD,Philippines,Mordor Intelligence,https://www.mordorintelligence.com/industry-reports/philippines-data-center-market,2026,2026-08-11,research,B,"2026-2031, CAGR 22.8%"
-MKT-02,Philippines BPO revenue,40.3→43.3-50.5,B USD,Philippines,IBPAP,https://ibpap.org/news-room/43,2026,2026-08-11,industry,B,2025 actual→2028 downside-upside range
-MKT-03,Global GPUaaS market,12.5→35,B USD,global,MarketsandMarkets,https://www.marketsandmarkets.com/Market-Reports/gpu-as-a-service-market-153803419.html,2026,2026-08-11,research,B,2026-2031
+MKT-01,Philippines DC market,0.85→2.37,B USD,Philippines,Mordor Intelligence,https://www.mordorintelligence.com/industry-reports/philippines-data-center-market,2026,2026-08-12,research,B,"2026-2031, CAGR 22.8%"
+MKT-02,Philippines BPO revenue,40.3/42.3/43.3-50.5,B USD,Philippines,IBPAP,https://ibpap.org/news-room/43,2026,2026-08-12,industry,B,"2025 actual $40.3B; 2026 forecast $42.3B; 2028 downside-upside $43.3B-$50.5B. See data/market_snapshots/ph_bpo.csv"
+MKT-03,Global GPUaaS market,8.21→26.62,B USD,global,MarketsandMarkets,https://www.marketsandmarkets.com/Market-Reports/gpu-as-a-service-market-153834402.html,2025-03,2026-08-12,research,B,"2025-2030, CAGR 26.5%. Industry context only, NOT PLDT TAM. Verified live 2026-08-12."
 PLDT-01,VITRO DC capacity share,65,%,Philippines,VITRO official,https://vitrodc.com/epldt-announces-plans-for-12th-data-center-to-support-ph-expansion-in-apac-and-tighten-market-stronghold/,2023,2026-08-11,vendor,A,"Capacity share, NOT revenue"
 PLDT-02,VITRO data centers,11,count,Philippines,VITRO official,https://vitrodc.com,2026,2026-08-11,vendor,A,
 PLDT-03,VITRO Sta. Rosa capacity,50,MW,Philippines,VITRO official,https://vitrodc.com,2026,2026-08-11,vendor,A,Separate from new 100MW DC
 PLDT-04,PLDT planned new DC,100,MW min,Philippines,VITRO official,https://vitrodc.com,2026,2026-08-11,vendor,A,12th DC
 PLDT-05,PLDT revenue,196.2,B PHP,Philippines,PLDT financials,https://main.pldt.com,2025,2026-08-11,filing,A,FY2025
 PLDT-06,PLDT EBITDA,111.2,B PHP,Philippines,PLDT financials,https://main.pldt.com,2025,2026-08-11,filing,A,FY2025
-DSK-01,DeepSeek V4 Flash params,284B/13B,total/active,model,OpenRouter API,https://openrouter.ai/deepseek/deepseek-v4-flash-0731,2026-04,2026-08-11,model_card,A,
-DSK-02,DeepSeek V4 Pro params,1.6T/49B,total/active,model,OpenRouter API,https://openrouter.ai/deepseek/deepseek-v4-pro,2026-04,2026-08-11,model_card,A,
-DSK-03,Qwen3.5-35B-A3B params,35B/3B,total/active,model,OpenRouter API,https://openrouter.ai/qwen/qwen3.5-flash-02-23,2026-02,2026-08-11,model_card,A,Native ctx 262K
-DSK-04,GPT-OSS 120B params,117B/5.1B,total/active,model,OpenRouter API,https://openrouter.ai/openai/gpt-oss-120b,2026,2026-08-11,model_card,A,MXFP4
-MAAS-GLM-01,GLM-5.2 OpenRouter price,0.4886/1.5356,USD/M_in/out,OpenRouter,OpenRouter,https://openrouter.ai/z-ai/glm-5.2,2026-08,2026-08-11,vendor,A,Corrected from wrong $0.76/$2.42
-MAAS-DSK-F1,DeepSeek V4 Flash 0731 price,0.08/0.18,USD/M_in/out,OpenRouter,OpenRouter,https://openrouter.ai/deepseek/deepseek-v4-flash-0731,2026-08,2026-08-11,vendor,A,Latest revision
-MAAS-DSK-P1,DeepSeek V4 Pro price,0.6317/1.2634,USD/M_in/out,OpenRouter,OpenRouter,https://openrouter.ai/deepseek/deepseek-v4-pro,2026-08,2026-08-11,vendor,A,Direct API may differ
-MAAS-QWEN-F1,Qwen 3.5 Flash OpenRouter price,0.065/0.26,USD/M_in/out,OpenRouter,OpenRouter,https://openrouter.ai/qwen/qwen3.5-flash-02-23,2026-08,2026-08-11,vendor,A,Promotional route
+DSK-01,DeepSeek V4 Flash params,284B/13B,total/active,model,OpenRouter API,https://openrouter.ai/deepseek/deepseek-v4-flash-0731,2026-04,2026-08-12,model_card,A,
+DSK-02,DeepSeek V4 Pro params,1.6T/49B,total/active,model,OpenRouter API,https://openrouter.ai/deepseek/deepseek-v4-pro,2026-04,2026-08-12,model_card,A,
+DSK-03,Qwen3.5-35B-A3B params,35B/3B,total/active,model,OpenRouter API,https://openrouter.ai/qwen/qwen3.5-flash-02-23,2026-02,2026-08-12,model_card,A,Native ctx 262K
+DSK-04,GPT-OSS 120B params,117B/5.1B,total/active,model,OpenRouter API,https://openrouter.ai/openai/gpt-oss-120b,2026,2026-08-12,model_card,A,MXFP4
+MAAS-GLM-01,GLM-5.2 OpenRouter price,0.4886/1.536,USD/M_in/out,OpenRouter,OpenRouter,https://openrouter.ai/z-ai/glm-5.2,2026-08,2026-08-12,vendor,A,65% off promo active. See data/pricing_snapshots/maas_openrouter.csv
+MAAS-DSK-F1,DeepSeek V4 Flash 0731 price,0.0798/0.1596,USD/M_in/out,OpenRouter,OpenRouter,https://openrouter.ai/deepseek/deepseek-v4-flash-0731,2026-08,2026-08-12,vendor,A,43% off promo active. See data/pricing_snapshots/maas_openrouter.csv
+MAAS-DSK-F2,DeepSeek V4 Flash 0423 price,0.0679/0.168,USD/M_in/out,OpenRouter,OpenRouter,https://openrouter.ai/deepseek/deepseek-v4-flash,2026-08,2026-08-12,vendor,A,Slug now resolves to 0423; prior $0.14/$0.28 was Direct-API mis-attribution
+MAAS-DSK-P1,DeepSeek V4 Pro price,0.4225/0.845,USD/M_in/out,OpenRouter,OpenRouter,https://openrouter.ai/deepseek/deepseek-v4-pro,2026-08,2026-08-12,vendor,A,75% off promo active. See data/pricing_snapshots/maas_openrouter.csv
+MAAS-QWEN-F1,Qwen 3.5 Flash OpenRouter price,0.065/0.26,USD/M_in/out,OpenRouter,OpenRouter,https://openrouter.ai/qwen/qwen3.5-flash-02-23,2026-08,2026-08-12,vendor,A,See data/pricing_snapshots/maas_openrouter.csv
 TCO-01,Facility cost,1500,USD/GPU/yr,Philippines,estimate,,,2026-08-11,estimate,D,Needs local DC quote
 TCO-02,Ops cost,600,USD/GPU/yr,Philippines,estimate,,,2026-08-11,estimate,D,SRE allocation

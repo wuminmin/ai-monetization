@@ -1,13 +1,23 @@
 {
-  "generated_at": "2026-08-11T15:32:24.478442+00:00",
-  "assumptions_hash": "ede4a77815cf",
-  "sources_hash": "458767db861a",
+  "assumptions_hash": "6e0f4ef36dac",
+  "deployment_profiles_hash": "3afe434483d5",
+  "generated_at": "2026-08-11T15:33:22+00:00",
+  "generator_code_hash": "7b5ee8d6ada9",
+  "generator_version": "4.0.0",
+  "git_commit": "ac33fdc",
+  "gpu_pricing_snapshot_hash": null,
+  "maas_pricing_snapshot_hash": "94dd51c73ed6",
+  "market_snapshot_hash": "4cc93238a799",
   "results": {
-    "gpu_tco_rows": 5,
-    "margin_rows": 35,
+    "bpo_detail_rows": 4,
     "gpu_pricing_rows": 6,
-    "market_rows": 3,
+    "gpu_tco_rows": 5,
+    "maas_deployment_rows": 7,
     "maas_pricing_rows": 8,
-    "maas_deployment_rows": 7
-  }
+    "margin_rows": 35,
+    "market_rows": 3,
+    "node_sensitivity_rows": 25
+  },
+  "source_date_epoch": 1786462402,
+  "sources_hash": "cdcbb949888b"
 }

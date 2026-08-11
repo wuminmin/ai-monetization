@@ -1,8 +1,8 @@
 # D. AI 产品商业化策略
 
-## 初步可行性研究 (Draft v4)
+## 初步可行性研究 (Draft v5, 第四轮评审修正)
 
-> **数据声明**：截至 2026年8月11日的公开数据快照。所有 CSV 由 `src/build_all.py` 从源数据自动生成 (见 `models/build_metadata.json`)。报告为初步可行性研究，不作为投资决策依据。所有 GPUaaS 毛利率为**基础设施贡献毛利率**。**所有 MaaS 毛利率为 🔴 无效**——待 benchmark 后重算。
+> **数据声明**：截至 2026年8月12日的公开数据快照。所有 CSV 由 `src/build_all.py` 从源数据**确定性生成** (SOURCE_DATE_EPOCH, 两次构建 byte-identical; 见 `models/build_metadata.json`)。报告为初步可行性研究，不作为投资决策依据。所有 GPUaaS 毛利率为**基础设施贡献毛利率**。**所有 MaaS 毛利率为 🔴 无效**——待 benchmark 后重算。DGX H100 节点价 $300k 为 D 级内部估算 (待正式报价)。
 
 ---
 
@@ -83,6 +83,20 @@
 
 > Spot 最低价 = Baseline 保本价 $2.28/GPU/hr。目标 10% CM → $2.53/GPU/hr。
 
+### 🔴 节点采购价敏感性 (D 级估算, 待正式报价)
+
+> **DGX H100 节点价 $300,000 为内部估算 (可信度 D)。** NVIDIA DGX 用户指南仅提供硬件规格, 不含采购价。该价格直接进入折旧和每可计费 GPU 小时成本, 是核心投资假设。单一事实源: `models/gpu_node_price_sensitivity.csv`。
+
+| 节点价 (USD) | Baseline 保本 $/GPU/hr | Δ vs 基准 |
+|-------------|----------------------|----------|
+| $300,000 (基准) | $2.28 | — |
+| $350,000 | $2.55 | +$0.27 |
+| $400,000 | $2.82 | +$0.54 |
+| $450,000 | $3.09 | +$0.81 |
+| $500,000 | $3.36 | +$1.07 |
+
+> 节点价每增加 $100,000, 保本价上升约 $0.54/GPU/hr。若真实采购价为 $400,000, 则 Spot/Reserved/On-demand 定价建议均需相应上移。获得 NVIDIA 或授权经销商正式报价后, 此表应重算并升级至 A/B 级证据。
+
 ---
 
 ## 5. MaaS 模型配置 (🔴 毛利无效, 待 benchmark)
@@ -103,18 +117,20 @@
 
 > Qwen 3.5 Flash 已修正：原方案 1×H100 + 1M 上下文 + 28K tok/s 缺乏官方部署依据。现采用官方长上下文示例 (TP=8, 262K native context) 作为保守基线。
 
-### 竞品价格 (per provider route)
+### 竞品价格 (per provider route, snapshot 2026-08-12)
+
+> 价格来自 OpenRouter 路由页面, 2026-08-12 抓取。单一事实源: `data/pricing_snapshots/maas_openrouter.csv` (含 observed_at、promotion、content_hash)。促销状态已记录。
 
 | 模型 | Route | $/M_in | $/M_out | 促销 | 备注 |
 |------|-------|--------|---------|------|------|
-| DeepSeek V4 Flash | OpenRouter (0731) | $0.08 | $0.18 | — | 最新版本 |
-| DeepSeek V4 Flash | OpenRouter (original) | $0.14 | $0.28 | — | 逐步替换为 0731 |
-| DeepSeek V4 Pro | OpenRouter | $0.63 | $1.26 | — | Direct API 可能不同 (~$0.435/$0.87) |
-| Qwen 3.5 Flash | OpenRouter | $0.065 | $0.26 | Yes | 促销价; Alibaba Singapore direct ~$0.10/$0.40 |
+| DeepSeek V4 Flash | OpenRouter (0731) | $0.0798 | $0.1596 | 43% off | 最新版本, 促销中 |
+| DeepSeek V4 Flash | OpenRouter (0423) | $0.0679 | $0.168 | — | slug 现指向 0423; 原 $0.14/$0.28 系 Direct API 价误归此路由 |
+| DeepSeek V4 Pro | OpenRouter | $0.4225 | $0.845 | 75% off | 促销中; Direct API 可能不同 |
+| Qwen 3.5 Flash | OpenRouter | $0.065 | $0.26 | — | Alibaba Singapore direct ~$0.10/$0.40 |
 | Qwen 3.5 9B | OpenRouter | $0.10 | $0.15 | — | |
-| GPT-OSS 120B | OpenRouter | $0.037 | $0.17 | — | |
-| Gemma 4 31B | OpenRouter | $0.10 | $0.34 | — | |
-| GLM-5.2 | OpenRouter (standard) | $0.49 | $1.54 | — | 已修正: 原 $0.76/$2.42 错误 |
+| GPT-OSS 120B | OpenRouter | $0.03 | $0.17 | — | |
+| Gemma 4 31B | OpenRouter | $0.08 | $0.35 | — | |
+| GLM-5.2 | OpenRouter | $0.4886 | $1.536 | 65% off | 促销中; Z.AI Direct ~$1.40/$4.40 |
 
 ### 待完成
 
@@ -127,13 +143,15 @@
 
 ## 6. 市场背景
 
-| 指标 | 地理 | 规模 | 周期 | CAGR | 来源 | 可信度 |
-|------|-----|------|------|------|------|--------|
-| Philippines DC | 菲律宾 | $0.85B → $2.37B | 2026-2031 | 22.8% | Mordor Intelligence | B |
-| Philippines BPO | 菲律宾 | $40.3B → $43.3B-$50.5B | 2025-2028 | 1.2%–9.3% | IBPAP | B |
-| Global GPUaaS | 全球 | $12.5B → $35B | 2026-2031 | 22.9% | MarketsandMarkets | B |
+| 指标 | 地理 | 规模 | 周期 | CAGR | 基期 | 来源 | 可信度 |
+|------|-----|------|------|------|------|------|--------|
+| Philippines DC | 菲律宾 | $0.85B → $2.37B | 2026-2031 | 22.8% | 2026 | Mordor Intelligence | B |
+| Philippines BPO | 菲律宾 | $40.3B (2025 actual), $42.3B (2026 fcst) → $43.3B-$50.5B (2028) | 2025-2028 | 2.4%–7.8% / 1.2%–9.3% | 2025 / 2026 | IBPAP | B |
+| Global GPUaaS | 全球 | $8.21B → $26.62B | 2025-2030 | 26.5% | 2025 | MarketsandMarkets | B |
 
-> BPO 为情景区间：2025 实际 $40.3B, 2028 下行 $43.3B (CAGR 1.2%), 上行 $50.5B (CAGR 9.3%)。BPO 全行业收入不等于 AI 算力 TAM。
+> **BPO 双基期 CAGR**：以 2025 实际 $40.3B 为基期, 2025→2028 CAGR 为 2.4%–7.8%；以 2026 预测 $42.3B 为基期, 2026→2028 CAGR 为 1.2%–9.3%。2025→2026 实际到预测增长约 5.0%。单一事实源: `data/market_snapshots/ph_bpo.csv`。
+>
+> **全球 GPUaaS 仅为行业背景, 不是 PLDT 的 TAM。** 2026-08-12 实测 MarketsandMarkets 页面 (报告 153834402)。PLDT TAM 应从目标区域、可部署容量、客户工作负载 bottom-up 计算。
 
 ---
 
@@ -167,31 +185,34 @@
 
 ## 9. 状态清单
 
-### ✅ 已完成并独立验证
+### ✅ 已实现并验证 (公式与单位)
 - [x] GPUaaS 价格单位修正 (raw_price_unit + fixture 测试)
 - [x] TCO 分离 4 个利用率变量
 - [x] TCO 功率校验 (MFU 0-1, clamp idle~nameplate)
-- [x] 市场数据 CAGR 自动计算
-- [x] 构建链生成 CSV (build_all.py + metadata)
-- [x] 独立 fixture 测试 (tests/fixtures/)
+- [x] 市场数据 CAGR 自动计算 (BPO 双基期标注)
+- [x] 构建链确定性 (SOURCE_DATE_EPOCH, 无墙上时钟; 两次构建 byte-identical)
+- [x] MaaS 价格快照单一事实源 (data/pricing_snapshots/, 含 promotion + content_hash)
+- [x] BPO 长表 (data/market_snapshots/ph_bpo.csv, 2025 actual / 2026 forecast / 2028 range)
+- [x] fixture 测试 (GPU 价格 + MaaS 快照 + BPO 双基期)
+
+### 🟡 已实现, 待外部数据验证
+- [ ] 🟡 TCO 情景中的 PUE/功耗参数 (估算 D 级, 需 PDU/BMC 实测替换)
+- [ ] 🟡 DGX H100 节点价 $300k (D 级内部估算, 待正式报价 → 见 §4 节点价敏感性)
+- [ ] 🟡 Qwen 3.5 Flash 部署配置 (需 benchmark 确认 TP/GPU 数)
+- [ ] 🟡 Stage-gate 进入/退出指标 (需与运营团队对齐)
+- [ ] 🟡 MaaS 路由价格 (2026-08-12 快照, 动态价格需 ≤7 天刷新)
 
 ### 🔴 当前结果无效或未完成
-- [ ] 🔴 MaaS 所有毛利率 (待 benchmark)
+- [ ] 🔴 MaaS 所有毛利率 (待 benchmark, 当前不计算)
 - [ ] 🔴 MaaS 模型 benchmark (TTFT/TPOT/goodput)
 - [ ] 🔴 MaaS 输入/输出成本分拆 (prefill vs decode)
 - [ ] 🔴 DeepSeek Pro / GLM-5.2 Direct API 价格验证
 - [ ] 🔴 Bottom-up SOM
 - [ ] 🔴 CapEx / OpEx / NPV / IRR
 - [ ] 🔴 客户访谈 / LOI
-- [ ] 🔴 TCO 功耗实测 (PDU/BMC)
 - [ ] 🔴 Azure 竞品价格
 - [ ] 🔴 延迟实测
 
-### 🟡 已实现, 待数据验证
-- [ ] 🟡 TCO 情景中的 PUE/功耗参数 (需实测替换)
-- [ ] 🟡 Qwen 3.5 Flash 部署配置 (需 benchmark 确认 TP/GPU 数)
-- [ ] 🟡 Stage-gate 进入/退出指标 (需与运营团队对齐)
-
 ---
 
-*Draft v4, Generated 2026-08-11. All CSVs generated by build_all.py. See models/build_metadata.json.*
+*Draft v5, 第四轮评审修正。CSV 由 build_all.py 确定性生成 (SOURCE_DATE_EPOCH), 两次构建 byte-identical。详见 models/build_metadata.json。*

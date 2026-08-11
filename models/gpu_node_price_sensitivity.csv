@@ -1,0 +1,26 @@
+﻿scenario,node_price_usd,break_even_per_gpu_hr,delta_vs_baseline
+Demand Down,300000,3.86,0.0
+Demand Down,350000,4.32,0.46
+Demand Down,400000,4.78,0.92
+Demand Down,450000,5.24,1.38
+Demand Down,500000,5.7,1.84
+Baseline,300000,2.28,0.0
+Baseline,350000,2.55,0.27
+Baseline,400000,2.82,0.54
+Baseline,450000,3.09,0.81
+Baseline,500000,3.36,1.07
+Demand Up,300000,1.73,0.0
+Demand Up,350000,1.94,0.2
+Demand Up,400000,2.14,0.4
+Demand Up,450000,2.34,0.6
+Demand Up,500000,2.54,0.81
+Energy Stress,300000,2.45,0.0
+Energy Stress,350000,2.71,0.27
+Energy Stress,400000,2.98,0.54
+Energy Stress,450000,3.25,0.81
+Energy Stress,500000,3.52,1.07
+Reliability Stress,300000,2.51,0.0
+Reliability Stress,350000,2.8,0.3
+Reliability Stress,400000,3.1,0.59
+Reliability Stress,450000,3.39,0.89
+Reliability Stress,500000,3.69,1.18

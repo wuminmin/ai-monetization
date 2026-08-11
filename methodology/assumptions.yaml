@@ -5,7 +5,10 @@ fixed_costs_per_gpu_year:
   software: 500
 gpu:
   depreciation_years: 4
-  dgx_price_usd: 300000
+  dgx_price_usd: 300000  # INTERNAL ESTIMATE (confidence D); awaiting vendor quote.
+                         # NVIDIA DGX H100 user guide specifies hardware specs only,
+                         # NOT purchase price. See data/sources.csv GPU-02.
+                         # Sensitivity: +$100k node price ~= +$0.54/GPU-hr break-even.
   gpu_residual: 0.2
   gpus_per_node: 8
   model: NVIDIA H100 SXM5

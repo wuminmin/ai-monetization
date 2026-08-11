@@ -1,0 +1,5 @@
+metric_id,year,scenario,value_usd_b,value_type,source_owner,source_url,published_at,accessed_at,confidence,notes
+PH_BPO,2025,actual,40.3,actual,IBPAP,https://ibpap.org/news-room/43,2026,2026-08-12,B,2025 actual industry revenue
+PH_BPO,2026,base_forecast,42.3,forecast,IBPAP,https://ibpap.org/news-room/43,2026,2026-08-12,B,2026 base forecast (~5% growth over 2025 actual)
+PH_BPO,2028,downside,43.3,forecast,IBPAP,https://ibpap.org/news-room/43,2026,2026-08-12,B,2028 downside projection
+PH_BPO,2028,upside,50.5,forecast,IBPAP,https://ibpap.org/news-room/43,2026,2026-08-12,B,2028 upside projection

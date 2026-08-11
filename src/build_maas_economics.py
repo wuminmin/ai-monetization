@@ -1,16 +1,42 @@
 #!/usr/bin/env python3
 """
-MaaS Economics — competitor pricing only.
-NO margin calculations: all margins INVALID pending benchmark.
+MaaS Economics — competitor pricing loaded from a single price snapshot.
+
+Prices are NOT hardcoded here; they are loaded from
+data/pricing_snapshots/maas_openrouter.csv (the single source of truth).
+NO margin calculations: all margins remain INVALID pending benchmark.
 GPU cost from TCO model (fully_allocated_cost_per_billable_gpu_hour).
+
+Snapshot governance:
+  - Each row carries observed_at, effective_at, content_hash and promotion flag.
+  - Snapshot age is reported; CI/tests flag snapshots older than SNAPSHOT_TTL_DAYS.
 """
 
 import pandas as pd
 import yaml
 import os
+import datetime
 
-# Load deployment profiles from YAML
+SNAPSHOT_PATH = os.path.join(
+    os.path.dirname(__file__), "..", "data", "pricing_snapshots", "maas_openrouter.csv"
+)
 YAML_PATH = os.path.join(os.path.dirname(__file__), "..", "methodology", "model_deployment_profiles.yaml")
+
+# Snapshots older than this are considered stale (advisory, not blocking).
+SNAPSHOT_TTL_DAYS = 7
+
+
+def load_maas_price_snapshots():
+    """Load the MaaS price snapshot CSV (single source of truth)."""
+    return pd.read_csv(SNAPSHOT_PATH)
+
+
+def _snapshot_age_days(df):
+    """Days between observed_at and today (advisory staleness check)."""
+    if df.empty or "observed_at" not in df.columns:
+        return None
+    observed = pd.to_datetime(df["observed_at"]).dt.tz_localize(None)
+    return (datetime.datetime.now() - observed.iloc[0]).days
 
 
 def load_deployment_profiles():
@@ -18,72 +44,44 @@ def load_deployment_profiles():
         return yaml.safe_load(f)
 
 
-# ============================================================
-# Competitor pricing — per provider route, verified from OpenRouter API
-# accessed 2026-08-11
-# ============================================================
-COMPETITOR_PRICES = [
-    # DeepSeek V4 Flash — two OpenRouter routes
-    {"model": "DeepSeek V4 Flash", "model_id": "DeepSeek-V4-Flash-0731",
-     "provider_route": "OpenRouter (0731 latest)", "region": "provider_routed",
-     "in_per_m": 0.08, "out_per_m": 0.18, "cached_in_per_m": None,
-     "source_url": "https://openrouter.ai/deepseek/deepseek-v4-flash-0731",
-     "accessed_at": "2026-08-11", "promotion": False,
-     "notes": "Latest revision. Mapped to DeepSeek-V4-Flash-0731."},
-    {"model": "DeepSeek V4 Flash", "model_id": "DeepSeek-V4-Flash-0731",
-     "provider_route": "OpenRouter (original slug)", "region": "provider_routed",
-     "in_per_m": 0.14, "out_per_m": 0.28, "cached_in_per_m": None,
-     "source_url": "https://openrouter.ai/deepseek/deepseek-v4-flash",
-     "accessed_at": "2026-08-11", "promotion": False,
-     "notes": "Original slug being phased out in favor of 0731."},
-    # DeepSeek V4 Pro
-    {"model": "DeepSeek V4 Pro", "model_id": "DeepSeek-V4-Pro",
-     "provider_route": "OpenRouter", "region": "provider_routed",
-     "in_per_m": 0.6317, "out_per_m": 1.2634, "cached_in_per_m": None,
-     "source_url": "https://openrouter.ai/deepseek/deepseek-v4-pro",
-     "accessed_at": "2026-08-11", "promotion": False,
-     "notes": "DeepSeek Direct API may differ (~$0.435/$0.87 per api-docs). Needs separate verification."},
-    # Qwen 3.5 Flash
-    {"model": "Qwen 3.5 Flash", "model_id": "Qwen3.5-35B-A3B",
-     "provider_route": "OpenRouter", "region": "provider_routed",
-     "in_per_m": 0.065, "out_per_m": 0.26, "cached_in_per_m": None,
-     "source_url": "https://openrouter.ai/qwen/qwen3.5-flash-02-23",
-     "accessed_at": "2026-08-11", "promotion": True,
-     "notes": "Promotional route. Alibaba Cloud Singapore direct ~$0.10/$0.40."},
-    # Qwen 3.5 9B
-    {"model": "Qwen 3.5 9B", "model_id": "Qwen3.5-9B",
-     "provider_route": "OpenRouter", "region": "provider_routed",
-     "in_per_m": 0.10, "out_per_m": 0.15, "cached_in_per_m": None,
-     "source_url": "https://openrouter.ai/qwen/qwen3.5-9b",
-     "accessed_at": "2026-08-11", "promotion": False,
-     "notes": ""},
-    # GPT-OSS 120B
-    {"model": "GPT-OSS 120B", "model_id": "gpt-oss-120b",
-     "provider_route": "OpenRouter", "region": "provider_routed",
-     "in_per_m": 0.037, "out_per_m": 0.17, "cached_in_per_m": None,
-     "source_url": "https://openrouter.ai/openai/gpt-oss-120b",
-     "accessed_at": "2026-08-11", "promotion": False,
-     "notes": ""},
-    # Gemma 4 31B
-    {"model": "Gemma 4 31B", "model_id": "gemma-4-31b-it",
-     "provider_route": "OpenRouter", "region": "provider_routed",
-     "in_per_m": 0.10, "out_per_m": 0.34, "cached_in_per_m": None,
-     "source_url": "https://openrouter.ai/google/gemma-4-31b-it",
-     "accessed_at": "2026-08-11", "promotion": False,
-     "notes": ""},
-    # GLM-5.2 — corrected from $0.76/$2.42 to actual $0.4886/$1.5356
-    {"model": "GLM-5.2", "model_id": "GLM-5.2",
-     "provider_route": "OpenRouter (standard)", "region": "provider_routed",
-     "in_per_m": 0.4886, "out_per_m": 1.5356, "cached_in_per_m": None,
-     "source_url": "https://openrouter.ai/z-ai/glm-5.2",
-     "accessed_at": "2026-08-11", "promotion": False,
-     "notes": "Previous $0.76/$2.42 was incorrect. Z.AI Direct ~$1.40/$4.40 per docs.z.ai."},
-]
+# Map snapshot model_id -> human-readable model name (for the pricing table).
+# Deployment specs come from model_deployment_profiles.yaml.
+_MODEL_NAMES = {
+    "DeepSeek-V4-Flash-0731": "DeepSeek V4 Flash",
+    "DeepSeek-V4-Flash-0423": "DeepSeek V4 Flash",
+    "DeepSeek-V4-Pro": "DeepSeek V4 Pro",
+    "Qwen3.5-35B-A3B": "Qwen 3.5 Flash",
+    "Qwen3.5-9B": "Qwen 3.5 9B",
+    "gpt-oss-120b": "GPT-OSS 120B",
+    "gemma-4-31b-it": "Gemma 4 31B",
+    "GLM-5.2": "GLM-5.2",
+}
 
 
 def build_competitor_pricing_table():
-    """One row per provider route."""
-    return pd.DataFrame(COMPETITOR_PRICES)
+    """One row per provider route, derived from the price snapshot."""
+    snaps = load_maas_price_snapshots()
+    rows = []
+    for _, r in snaps.iterrows():
+        # promotion may be TRUE/FALSE strings or bool; normalize to bool
+        promo = str(r.get("promotion", "")).strip().upper() in ("TRUE", "1", "YES")
+        rows.append({
+            "model": _MODEL_NAMES.get(r["model_id"], r["model_id"]),
+            "model_id": r["model_id"],
+            "route_id": r["route_id"],
+            "provider_route": f"OpenRouter ({r['route_id']})",
+            "region": r["region"],
+            "in_per_m": r["input_price_per_m"],
+            "out_per_m": r["output_price_per_m"],
+            "cached_in_per_m": r.get("cached_input_price_per_m") if not pd.isna(r.get("cached_input_price_per_m", "")) else None,
+            "promotion": promo,
+            "promotion_detail": r.get("promotion_detail", ""),
+            "observed_at": r["observed_at"],
+            "content_hash": r["content_hash"],
+            "source_url": r["source_url"],
+            "route_note": r.get("route_note", ""),
+        })
+    return pd.DataFrame(rows)
 
 
 def build_deployment_summary():
@@ -108,19 +106,24 @@ if __name__ == "__main__":
     pd.set_option("display.width", 200)
 
     print("=" * 100)
-    print("  MaaS Competitor Pricing (per provider route)")
+    print("  MaaS Competitor Pricing (loaded from price snapshot)")
     print("  NOTE: ALL margins are INVALID pending benchmark. No margin calculations shown.")
     print("=" * 100)
 
     df = build_competitor_pricing_table()
+    age = _snapshot_age_days(df)
+    stale = age is not None and age > SNAPSHOT_TTL_DAYS
+    print(f"\n  Snapshot observed_at: {df.iloc[0]['observed_at']}  (age {age}d, "
+          f"{'STALE' if stale else 'fresh'}, TTL {SNAPSHOT_TTL_DAYS}d)")
+
     print("\n--- Competitor prices (per route) ---")
     for _, r in df.iterrows():
         cache = f", cache=${r['cached_in_per_m']:.4f}" if r["cached_in_per_m"] else ""
-        promo = " [PROMO]" if r["promotion"] else ""
-        print(f"  {r['model']:20s} [{r['provider_route']:30s}] "
+        promo = f" [{r['promotion_detail']}]" if r["promotion"] else ""
+        print(f"  {r['model']:20s} [{r['route_id']:35s}] "
               f"${r['in_per_m']:.4f}/M_in, ${r['out_per_m']:.4f}/M_out{cache}{promo}")
-        if r["notes"]:
-            print(f"    → {r['notes']}")
+        if r["route_note"]:
+            print(f"    -> {r['route_note']}")
 
     print("\n--- Deployment profiles ---")
     dep = build_deployment_summary()

@@ -133,15 +133,15 @@ def annual_depreciation_per_gpu() -> float:
     return GPU_PRICE * (1 - GPU_RESIDUAL) / DEPREC_YEARS
 
 
-def annual_system_depreciation_per_gpu() -> float:
-    system_cost = NODE_PRICE - GPU_PRICE * GPUS_PER_NODE
+def annual_system_depreciation_per_gpu(node_price: float = NODE_PRICE) -> float:
+    system_cost = node_price - GPU_PRICE * GPUS_PER_NODE
     per_gpu = system_cost / GPUS_PER_NODE
     return per_gpu * (1 - SYSTEM_RESIDUAL) / DEPREC_YEARS
 
 
-def annual_tco_per_gpu(s: dict) -> float:
+def annual_tco_per_gpu(s: dict, node_price: float = NODE_PRICE) -> float:
     dep = annual_depreciation_per_gpu()
-    sys_dep = annual_system_depreciation_per_gpu()
+    sys_dep = annual_system_depreciation_per_gpu(node_price)
     power = annual_power_cost_per_gpu(s)
     fixed = FIXED_COSTS["facility"] + FIXED_COSTS["network"] + FIXED_COSTS["ops"] + FIXED_COSTS["software"]
     return dep + sys_dep + power + fixed
@@ -152,9 +152,12 @@ def billable_gpu_hours_per_year(s: dict) -> float:
     return 8760 * s["service_availability"] * s["commercial_utilization"] * s["billing_efficiency"]
 
 
-def break_even_price_per_gpu_hr(s: dict) -> float:
-    """Infrastructure break-even $/GPU/hr (contribution margin basis)."""
-    annual_cost = annual_tco_per_gpu(s)
+def break_even_price_per_gpu_hr(s: dict, node_price: float = NODE_PRICE) -> float:
+    """Infrastructure break-even $/GPU/hr (contribution margin basis).
+
+    node_price may be overridden for sensitivity analysis (baseline = NODE_PRICE).
+    """
+    annual_cost = annual_tco_per_gpu(s, node_price)
     billable_hours = billable_gpu_hours_per_year(s)
     return annual_cost / billable_hours
 
@@ -216,6 +219,29 @@ def build_margin_sensitivity():
                 "break_even": round(be, 2),
                 "contribution_margin": round(cm, 4),
                 "verdict": verdict,
+            })
+    return pd.DataFrame(rows)
+
+
+def build_node_price_sensitivity():
+    """Break-even $/GPU/hr across a range of DGX node purchase prices.
+
+    The node price is an unverified internal estimate (confidence D). This table
+    shows how the break-even floor moves with the assumed purchase price, so the
+    report can present a cost RANGE rather than a single point.
+    """
+    # Baseline = assumptions.yaml value; stressed cases probe higher quotes.
+    node_prices = [NODE_PRICE, NODE_PRICE + 50000, NODE_PRICE + 100000,
+                   NODE_PRICE + 150000, NODE_PRICE + 200000]
+    rows = []
+    for key, s in SCENARIOS.items():
+        for np in node_prices:
+            be = break_even_price_per_gpu_hr(s, node_price=np)
+            rows.append({
+                "scenario": s["label"],
+                "node_price_usd": np,
+                "break_even_per_gpu_hr": round(be, 2),
+                "delta_vs_baseline": round(be - break_even_price_per_gpu_hr(s), 2),
             })
     return pd.DataFrame(rows)
 

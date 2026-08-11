@@ -1,7 +1,13 @@
 #!/usr/bin/env python3
 """
 Master build script — generates all CSVs from source data.
-Outputs include metadata (generated_at, assumptions_hash).
+Outputs a DETERMINISTIC manifest (no wall-clock time) to the tracked
+models/build_metadata.json, plus a runtime metadata file (with the real
+build time) to build/runtime_metadata.json (gitignored).
+
+Determinism: generated_at is derived from SOURCE_DATE_EPOCH (defaults to 0
+= 1970-01-01) so that two builds from the same inputs produce byte-identical
+tracked artifacts. CI sets SOURCE_DATE_EPOCH to the commit timestamp.
 All scripts load from YAML/CSV inputs, never hardcode constants.
 """
 
@@ -10,39 +16,72 @@ import os
 import json
 import hashlib
 import datetime
+import subprocess
 
 sys.path.insert(0, os.path.dirname(__file__))
 
-GENERATED_AT = datetime.datetime.now(datetime.timezone.utc).isoformat()
+GENERATOR_VERSION = "4.0.0"
+REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 OUTPUT_DIRS = {
-    "models": os.path.join(os.path.dirname(__file__), "..", "models"),
-    "data": os.path.join(os.path.dirname(__file__), "..", "data"),
+    "models": os.path.join(REPO_ROOT, "models"),
+    "data": os.path.join(REPO_ROOT, "data"),
+    "build": os.path.join(REPO_ROOT, "build"),
 }
 
 
 def file_hash(path):
-    """SHA256 hash of a file."""
+    """SHA256 hash of a file (first 12 hex chars), or None if missing."""
+    if not path or not os.path.exists(path):
+        return None
     with open(path, "rb") as f:
         return hashlib.sha256(f.read()).hexdigest()[:12]
 
 
+def source_date_epoch_dt():
+    """Deterministic timestamp from SOURCE_DATE_EPOCH (Unix seconds); defaults to 0."""
+    epoch = int(os.environ.get("SOURCE_DATE_EPOCH", "0") or "0")
+    return datetime.datetime.fromtimestamp(epoch, tz=datetime.timezone.utc)
+
+
+def git_commit():
+    """Short commit hash of HEAD, or 'unknown' if git is unavailable."""
+    try:
+        out = subprocess.check_output(
+            ["git", "rev-parse", "--short", "HEAD"],
+            cwd=REPO_ROOT, stderr=subprocess.DEVNULL,
+        ).decode().strip()
+        return out or "unknown"
+    except Exception:
+        return "unknown"
+
+
+def hash_src(rel_path):
+    """Helper: hash a file relative to repo root."""
+    return file_hash(os.path.join(REPO_ROOT, rel_path))
+
+
 def write_csv_atomic(df, path):
-    """Write CSV atomically (temp then rename)."""
-    import tempfile
+    """Write CSV atomically (temp then replace).
+
+    os.replace is used (not os.rename) so it works on Windows where the
+    destination may already exist.
+    """
     tmp = path + ".tmp"
     df.to_csv(tmp, index=False, encoding="utf-8-sig")
-    os.rename(tmp, path)
+    os.replace(tmp, path)
     print(f"  Written: {os.path.relpath(path)}")
 
 
 def build_gpu_tco():
-    """Generate TCO + margin sensitivity CSVs."""
-    from build_gpu_tco import build_tco_table, build_margin_sensitivity
+    """Generate TCO + margin sensitivity + node-price sensitivity CSVs."""
+    from build_gpu_tco import build_tco_table, build_margin_sensitivity, build_node_price_sensitivity
     tco = build_tco_table()
     margins = build_margin_sensitivity()
+    node_sens = build_node_price_sensitivity()
     write_csv_atomic(tco, os.path.join(OUTPUT_DIRS["models"], "gpu_tco_breakdown.csv"))
     write_csv_atomic(margins, os.path.join(OUTPUT_DIRS["models"], "gross_margin_sensitivity.csv"))
-    return {"gpu_tco_rows": len(tco), "margin_rows": len(margins)}
+    write_csv_atomic(node_sens, os.path.join(OUTPUT_DIRS["models"], "gpu_node_price_sensitivity.csv"))
+    return {"gpu_tco_rows": len(tco), "margin_rows": len(margins), "node_sensitivity_rows": len(node_sens)}
 
 
 def build_gpu_pricing():
@@ -54,11 +93,14 @@ def build_gpu_pricing():
 
 
 def build_market():
-    """Generate market data CSV."""
-    from build_market_model import build_market_table
+    """Generate market data CSV + BPO long-table detail CSV."""
+    from build_market_model import build_market_table, build_bpo_detail_table
     df = build_market_table()
     write_csv_atomic(df, os.path.join(OUTPUT_DIRS["data"], "market_data.csv"))
-    return {"market_rows": len(df)}
+    # BPO long-table (one row per year/scenario) for auditing
+    bpo_detail = build_bpo_detail_table()
+    write_csv_atomic(bpo_detail, os.path.join(OUTPUT_DIRS["data"], "bpo_detail.csv"))
+    return {"market_rows": len(df), "bpo_detail_rows": len(bpo_detail)}
 
 
 def build_maas():
@@ -105,21 +147,61 @@ def build_maas_deployments():
 
 
 def generate_metadata(results):
-    """Write build metadata."""
+    """Write a DETERMINISTIC manifest to models/build_metadata.json (tracked)
+    and a runtime metadata file to build/runtime_metadata.json (gitignored).
+
+    The tracked manifest contains NO wall-clock time — generated_at comes from
+    SOURCE_DATE_EPOCH so two builds from identical inputs are byte-identical.
+    """
     assumptions_path = os.path.join(os.path.dirname(__file__), "..", "methodology", "assumptions.yaml")
     sources_path = os.path.join(OUTPUT_DIRS["data"], "sources.csv")
+    deployment_profiles_path = os.path.join(os.path.dirname(__file__), "..", "methodology", "model_deployment_profiles.yaml")
 
-    meta = {
-        "generated_at": GENERATED_AT,
-        "assumptions_hash": file_hash(assumptions_path) if os.path.exists(assumptions_path) else None,
-        "sources_hash": file_hash(sources_path) if os.path.exists(sources_path) else None,
-        "results": results,
+    # Input snapshot files (may not all exist yet — hash_src returns None if missing)
+    input_hashes = {
+        "assumptions_hash": hash_src("methodology/assumptions.yaml"),
+        "sources_hash": hash_src("data/sources.csv"),
+        "deployment_profiles_hash": hash_src("methodology/model_deployment_profiles.yaml"),
+        "gpu_pricing_snapshot_hash": hash_src("data/pricing_snapshots/gpu_openrouter.csv"),
+        "maas_pricing_snapshot_hash": hash_src("data/pricing_snapshots/maas_openrouter.csv"),
+        "market_snapshot_hash": hash_src("data/market_snapshots/ph_bpo.csv"),
     }
 
-    meta_path = os.path.join(OUTPUT_DIRS["models"], "build_metadata.json")
-    with open(meta_path, "w") as f:
-        json.dump(meta, f, indent=2)
-    print(f"\n  Metadata: {os.path.relpath(meta_path)}")
+    # Hash of all generator source code (this directory's .py files)
+    src_dir = os.path.dirname(__file__)
+    code_h = hashlib.sha256()
+    for fname in sorted(os.listdir(src_dir)):
+        if fname.endswith(".py"):
+            with open(os.path.join(src_dir, fname), "rb") as f:
+                code_h.update(f.read())
+    generator_code_hash = code_h.hexdigest()[:12]
+
+    # DETERMINISTIC manifest — no wall-clock time
+    manifest = {
+        "generator_version": GENERATOR_VERSION,
+        "git_commit": git_commit(),
+        "generated_at": source_date_epoch_dt().isoformat(),
+        "source_date_epoch": int(os.environ.get("SOURCE_DATE_EPOCH", "0") or "0"),
+        **input_hashes,
+        "generator_code_hash": generator_code_hash,
+        "results": results,
+    }
+    manifest_path = os.path.join(OUTPUT_DIRS["models"], "build_metadata.json")
+    with open(manifest_path, "w") as f:
+        json.dump(manifest, f, indent=2, sort_keys=True)
+    print(f"\n  Manifest (deterministic): {os.path.relpath(manifest_path)}")
+
+    # RUNTIME metadata — real build time, gitignored
+    os.makedirs(OUTPUT_DIRS["build"], exist_ok=True)
+    runtime = {
+        "build_wall_clock": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+        "git_commit": manifest["git_commit"],
+        "generator_version": GENERATOR_VERSION,
+    }
+    runtime_path = os.path.join(OUTPUT_DIRS["build"], "runtime_metadata.json")
+    with open(runtime_path, "w") as f:
+        json.dump(runtime, f, indent=2, sort_keys=True)
+    print(f"  Runtime metadata: {os.path.relpath(runtime_path)} (gitignored)")
 
 
 def main():
