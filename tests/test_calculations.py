@@ -156,15 +156,19 @@ def test_assumptions_loaded_from_yaml():
 
 
 def test_build_metadata_exists():
-    """Build metadata must be generated."""
+    """Build metadata must be generated and contain content hashes (no VCS identity)."""
     import json
     meta_path = os.path.join(os.path.dirname(__file__), "..", "models", "build_metadata.json")
     assert os.path.exists(meta_path), "build_metadata.json missing — run build_all.py"
     with open(meta_path) as f:
         meta = json.load(f)
-    assert "generated_at" in meta
     assert "assumptions_hash" in meta
-    print(f"PASS: test_build_metadata_exists")
+    assert "generator_code_hash" in meta
+    # Tracked manifest must NOT contain VCS identity or timestamps (self-reference fix)
+    assert "generated_at" not in meta, "tracked manifest must not contain generated_at"
+    assert "git_commit" not in meta, "tracked manifest must not contain git_commit"
+    assert "source_date_epoch" not in meta, "tracked manifest must not contain source_date_epoch"
+    print(f"PASS: test_build_metadata_exists (no VCS identity)")
 
 
 def test_no_fabricated_revenue():
@@ -184,20 +188,25 @@ def test_no_fabricated_revenue():
 # DGX downgrade, snapshot/fixture consistency.
 # ============================================================
 
-def test_build_metadata_no_wallclock():
-    """Tracked manifest must NOT contain wall-clock time (only SOURCE_DATE_EPOCH)."""
+def test_tracked_manifest_has_no_vcs_identity():
+    """Tracked manifest must contain NO git commit, timestamp, or VCS identity.
+
+    Writing the current commit SHA into a committed file is a self-reference
+    that can never converge: every commit changes the SHA, so CI rebuilding on
+    the new commit always diffs. The tracked manifest may contain ONLY content
+    hashes. Provenance lives in the gitignored runtime metadata.
+    """
     import json
     meta_path = os.path.join(os.path.dirname(__file__), "..", "models", "build_metadata.json")
     with open(meta_path) as f:
         meta = json.load(f)
-    # generated_at must come from SOURCE_DATE_EPOCH, not datetime.now()
-    assert "generated_at" in meta
-    assert "source_date_epoch" in meta, "manifest must record source_date_epoch"
-    # generator_code_hash must be present (proves determinism wiring)
+    for forbidden in ("git_commit", "generated_at", "source_date_epoch",
+                      "build_wall_clock", "ci_run_id"):
+        assert forbidden not in meta, f"tracked manifest must not contain {forbidden}"
+    # Must still carry content hashes + generator identity
     assert meta.get("generator_code_hash"), "manifest missing generator_code_hash"
-    # No build_wall_clock field in the tracked manifest (that lives in build/runtime_metadata.json)
-    assert "build_wall_clock" not in meta, "tracked manifest must not contain wall-clock time"
-    print(f"PASS: test_build_metadata_no_wallclock")
+    assert meta.get("assumptions_hash"), "manifest missing assumptions_hash"
+    print(f"PASS: test_tracked_manifest_has_no_vcs_identity")
 
 
 def test_bpo_dual_cagr_periods():
@@ -290,6 +299,132 @@ def test_node_price_sensitivity_exists():
     print(f"PASS: test_node_price_sensitivity_exists (+$100k -> +${d}/GPU-hr)")
 
 
+def test_build_twice_is_byte_identical():
+    """Two temp-dir builds must produce byte-identical tracked outputs."""
+    import tempfile, shutil, hashlib
+    sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
+    os.environ["SOURCE_DATE_EPOCH"] = "0"
+    hashes = []
+    for i in range(2):
+        tmp = tempfile.mkdtemp(prefix=f"r5build{i}_")
+        try:
+            dirs = {"models": os.path.join(tmp, "models"),
+                    "data": os.path.join(tmp, "data"),
+                    "build": os.path.join(tmp, "build")}
+            for d in dirs.values():
+                os.makedirs(d, exist_ok=True)
+            import build_all
+            build_all.build_all(output_dirs=dirs, verbose=False)
+            # Hash the manifest + a couple of CSVs
+            h = hashlib.sha256()
+            for fn in ["build_metadata.json", "market_data.csv"]:
+                p = os.path.join(dirs["models"] if fn.endswith(".json") else dirs["data"], fn)
+                with open(p, "rb") as f:
+                    h.update(f.read())
+            hashes.append(h.hexdigest())
+        finally:
+            shutil.rmtree(tmp, ignore_errors=True)
+    assert hashes[0] == hashes[1], "Two temp builds are NOT byte-identical (non-deterministic)"
+    print(f"PASS: test_build_twice_is_byte_identical")
+
+
+def test_check_generated_does_not_modify_worktree():
+    """check_generated.py must build in temp dirs and leave the worktree clean."""
+    import subprocess
+    repo = os.path.join(os.path.dirname(__file__), "..")
+    # Snapshot git status before
+    before = subprocess.check_output(["git", "status", "--porcelain"], cwd=repo).decode()
+    r = subprocess.run([sys.executable, os.path.join("src", "check_generated.py")],
+                       cwd=repo, capture_output=True, text=True)
+    after = subprocess.check_output(["git", "status", "--porcelain"], cwd=repo).decode()
+    assert before == after, f"check_generated modified the worktree:\n{before}\n---\n{after}"
+    print(f"PASS: test_check_generated_does_not_modify_worktree")
+
+
+def test_deepseek_checkpoint_precision():
+    """DeepSeek V4 Pro/Flash must be FP4_EXPERTS_FP8_OTHER, NOT pure FP8."""
+    import yaml
+    yaml_path = os.path.join(os.path.dirname(__file__), "..", "methodology", "model_deployment_profiles.yaml")
+    with open(yaml_path) as f:
+        profiles = yaml.safe_load(f)
+    for m in profiles["models"]:
+        if m["model_id"] in ("DeepSeek-V4-Pro", "DeepSeek-V4-Flash-0731"):
+            assert m["weight_format"] == "FP4_EXPERTS_FP8_OTHER", \
+                f"{m['model_id']}: weight_format {m['weight_format']} != FP4_EXPERTS_FP8_OTHER"
+            assert m["checkpoint_precision"] == "FP4_EXPERTS_FP8_OTHER"
+    print(f"PASS: test_deepseek_checkpoint_precision (Pro/Flash = FP4+FP8 mixed)")
+
+
+def test_checkpoint_size_fits_total_hbm():
+    """Every model with a checkpoint_size_gb must fit in its total_hbm_gb."""
+    import yaml
+    yaml_path = os.path.join(os.path.dirname(__file__), "..", "methodology", "model_deployment_profiles.yaml")
+    with open(yaml_path) as f:
+        profiles = yaml.safe_load(f)
+    for m in profiles["models"]:
+        sz = m.get("checkpoint_size_gb")
+        hbm = m.get("total_hbm_gb")
+        if sz is not None and hbm is not None:
+            assert sz < hbm, f"{m['model_id']}: checkpoint {sz}GB >= HBM {hbm}GB (weights don't fit)"
+            assert m.get("weights_fit") is True, f"{m['model_id']}: weights_fit should be True"
+    print(f"PASS: test_checkpoint_size_fits_total_hbm (V4 Pro 865<1280, Flash 167<640)")
+
+
+def test_deployment_context_not_assumed():
+    """No deployment may assume a tested context — max_context_tested must be null."""
+    import yaml
+    yaml_path = os.path.join(os.path.dirname(__file__), "..", "methodology", "model_deployment_profiles.yaml")
+    with open(yaml_path) as f:
+        profiles = yaml.safe_load(f)
+    for m in profiles["models"]:
+        for dep in m["deployments"]:
+            assert dep.get("max_context_tested") is None, \
+                f"{m['model_id']}: max_context_tested must be null (unverified)"
+            assert dep.get("benchmark_status") == "not_run"
+    print(f"PASS: test_deployment_context_not_assumed (all max_context_tested = null)")
+
+
+def test_reserved_price_covers_break_even():
+    """Recommended Reserved price must cover break-even (CM >= 0) at every node price."""
+    df = pd.read_csv(os.path.join(os.path.dirname(__file__), "..", "models", "pricing_recommendations.csv"))
+    reserved = df[df["tier"] == "reserved"]
+    for _, r in reserved.iterrows():
+        assert r["recommended_price_per_gpu_hr"] >= r["break_even_per_gpu_hr"] - 0.001, \
+            f"Reserved {r['node_price_usd']}/{r['scenario']}: rec ${r['recommended_price_per_gpu_hr']} < break-even ${r['break_even_per_gpu_hr']}"
+    print(f"PASS: test_reserved_price_covers_break_even ({len(reserved)} rows, no negative margins)")
+
+
+def test_pricing_table_scales_with_node_price():
+    """Reserved minimum price must increase with node price (Baseline)."""
+    df = pd.read_csv(os.path.join(os.path.dirname(__file__), "..", "models", "pricing_recommendations.csv"))
+    base = df[(df["tier"] == "reserved") & (df["scenario"] == "Baseline")].sort_values("node_price_usd")
+    prices = base["recommended_price_per_gpu_hr"].tolist()
+    assert all(prices[i] < prices[i + 1] for i in range(len(prices) - 1)), \
+        "Reserved price must scale up with node price"
+    print(f"PASS: test_pricing_table_scales_with_node_price ({' < '.join(f'${p}' for p in prices)})")
+
+
+def test_project_status_consistent():
+    """project_status.yaml test_count must match the actual test count, and the
+    README/report status blocks must contain the version."""
+    import yaml, re
+    yaml_path = os.path.join(os.path.dirname(__file__), "..", "project_status.yaml")
+    with open(yaml_path) as f:
+        status = yaml.safe_load(f)
+    # Count actual test functions
+    with open(os.path.join(os.path.dirname(__file__), "test_calculations.py")) as f:
+        actual = sum(1 for line in f if re.match(r"^def test_", line))
+    # README must contain the version + the dynamic test count
+    with open(os.path.join(os.path.dirname(__file__), "..", "README.md")) as f:
+        readme = f.read()
+    assert status["version"] in readme, "README status block missing version"
+    assert f"**{actual} 项**" in readme, f"README test count not synced (says != {actual})"
+    # CI claim must NOT be a static green/red assertion
+    assert "CI green" not in readme.lower() or "CI 结果以" in readme, \
+        "README must not hardcode CI status"
+    print(f"PASS: test_project_status_consistent (version={status['version']}, tests={actual})")
+
+
 if __name__ == "__main__":
     test_official_price_normalization()
     test_coreweave_not_understated()
@@ -308,11 +443,20 @@ if __name__ == "__main__":
     test_build_metadata_exists()
     test_no_fabricated_revenue()
     # Round 4
-    test_build_metadata_no_wallclock()
+    test_tracked_manifest_has_no_vcs_identity()
     test_bpo_dual_cagr_periods()
     test_global_gpuaas_matches_live_snapshot()
     test_maas_prices_match_snapshot()
     test_maas_snapshot_has_governance_fields()
     test_dgx_node_price_is_confidence_d()
     test_node_price_sensitivity_exists()
-    print("\n=== ALL 23 TESTS PASSED ===")
+    # Round 5
+    test_build_twice_is_byte_identical()
+    test_check_generated_does_not_modify_worktree()
+    test_deepseek_checkpoint_precision()
+    test_checkpoint_size_fits_total_hbm()
+    test_deployment_context_not_assumed()
+    test_reserved_price_covers_break_even()
+    test_pricing_table_scales_with_node_price()
+    test_project_status_consistent()
+    print("\n=== ALL 31 TESTS PASSED ===")

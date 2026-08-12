@@ -8,40 +8,65 @@ global_notes:
 models:
 - active_params_b: 13
   arch: MoE
+  checkpoint_precision: FP4_EXPERTS_FP8_OTHER
+  checkpoint_size_gb: 167
   deployments:
   - benchmark_status: not_run
     gpu_config: 8xH100 SXM5
     gpu_count: 8
-    name: Production candidate
-    note: Standard TP=8 for MoE inference; throughput needs benchmark
+    max_concurrency_tested: null
+    max_context_tested: null
+    name: 8xH100 memory-feasibility candidate
+    note: FP4+FP8 mixed checkpoint ~167GB fits 8xH100 (640GB HBM) weights-only;
+      runtime/context/concurrency UNVERIFIED pending benchmark.
+    peak_hbm_measured_gb: null
     pipeline_parallel: 1
     tensor_parallel: 8
     throughput_source: null
     throughput_tps: null
+  gpu_model: H100_SXM_80GB
   has_valid_margin: false
   model_id: DeepSeek-V4-Flash-0731
+  model_max_context: 1048576
+  model_repository: deepseek-ai/DeepSeek-V4-Flash-0731
   native_context: 1048576
   openrouter_slug: deepseek/deepseek-v4-flash-0731
+  runtime_fit: unverified
+  total_hbm_gb: 640
   total_params_b: 284
-  weight_format: FP8
+  weight_format: FP4_EXPERTS_FP8_OTHER
+  weights_fit: true
 - active_params_b: 49
   arch: MoE
+  checkpoint_precision: FP4_EXPERTS_FP8_OTHER
+  checkpoint_size_gb: 865
   deployments:
   - benchmark_status: not_run
     gpu_config: 16xH100 (2 nodes)
     gpu_count: 16
-    name: Multi-node candidate
-    note: 1.6T total requires multi-node TP=8 PP=2
+    max_concurrency_tested: null
+    max_context_tested: null
+    name: 16xH100 memory-feasibility candidate
+    note: FP4+FP8 mixed checkpoint ~865GB fits 16xH100 (1280GB HBM) weights-only;
+      runtime/context/concurrency UNVERIFIED pending benchmark. Pure FP8 (~1.6TB)
+      would NOT fit — do not treat weight_format as pure FP8.
+    peak_hbm_measured_gb: null
     pipeline_parallel: 2
     tensor_parallel: 8
     throughput_source: null
     throughput_tps: null
+  gpu_model: H100_SXM_80GB
   has_valid_margin: false
   model_id: DeepSeek-V4-Pro
+  model_max_context: 1048576
+  model_repository: deepseek-ai/DeepSeek-V4-Pro
   native_context: 1048576
   openrouter_slug: deepseek/deepseek-v4-pro
+  runtime_fit: unverified
+  total_hbm_gb: 1280
   total_params_b: 1600
-  weight_format: FP8
+  weight_format: FP4_EXPERTS_FP8_OTHER
+  weights_fit: true
 - active_params_b: 3
   arch: MoE (linear attention hybrid)
   deployments:

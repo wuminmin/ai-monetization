@@ -1,8 +1,12 @@
 # D. AI 产品商业化策略
 
-## 初步可行性研究 (Draft v5, 第四轮评审修正)
+## 初步可行性研究
 
-> **数据声明**：截至 2026年8月12日的公开数据快照。所有 CSV 由 `src/build_all.py` 从源数据**确定性生成** (SOURCE_DATE_EPOCH, 两次构建 byte-identical; 见 `models/build_metadata.json`)。报告为初步可行性研究，不作为投资决策依据。所有 GPUaaS 毛利率为**基础设施贡献毛利率**。**所有 MaaS 毛利率为 🔴 无效**——待 benchmark 后重算。DGX H100 节点价 $300k 为 D 级内部估算 (待正式报价)。
+<!-- BEGIN STATUS -->
+**状态 (draft_v6):** 31 项测试。GPUaaS 公式结构已校正；核心 CapEx (节点价) 和运行输入待正式报价及实测验证。MaaS 毛利 🔴 无效 (待 benchmark)。DGX 节点价 D 级内部估算 (待正式报价)。CI 结果以 [GitHub Actions](../../actions) 当前状态为准。
+<!-- END STATUS -->
+
+> **数据声明**：截至 2026年8月12日的公开数据快照。所有 CSV 由 `src/build_all.py` 从源数据确定性生成 (manifest 无 VCS 身份; 见 `models/build_metadata.json`)。报告为初步可行性研究，不作为投资决策依据。所有 GPUaaS 毛利率为**基础设施贡献毛利率**。**所有 MaaS 毛利率为 🔴 无效**——待 benchmark 后重算。DGX H100 节点价 $300k 为 D 级内部估算 (待正式报价)。
 
 ---
 
@@ -73,15 +77,27 @@
 
 > 基础设施贡献毛利率, 不含销售/支持/坏账/融资/进口/备件/网络 Fabric/存储/SLA 赔偿。
 
-### 定价建议
+### 定价建议 (随未验证的节点采购价浮动)
 
-| 层级 | 规格 | 建议 $/GPU/hr | Baseline CM |
-|------|------|-------------|------------|
-| Reserved (12月) | 1-8×H100, Business SLA | $2.69–$3.20 | 15–29% |
-| On-demand | 8×H100 SXM, Enterprise SLA | $3.99–$5.00 | 43–54% |
-| Spot (可中断) | ≥保本价 | ≥$2.28 (Baseline) | 0–10% |
+> ⚠️ **定价建议不再固定为单一数字, 而是节点采购价的函数。** DGX H100 节点价 $300k 为 D 级估算；若真实报价为 $400k, Baseline 保本价从 $2.28 升至 $2.82, 此前的固定建议 Reserved $2.69 反而亏 4.8%。下表为每个 (节点价 × 情景) 组合给出达到目标贡献毛利率的最低价。公式: `建议价 = 保本价 ÷ (1 − 目标 CM)`。单一事实源: `models/pricing_recommendations.csv`。
 
-> Spot 最低价 = Baseline 保本价 $2.28/GPU/hr。目标 10% CM → $2.53/GPU/hr。
+**Reserved (12月, 目标 15% CM) — Baseline 情景**
+
+| 节点价 | 保本 $/GPU/hr | 建议 Reserved 价 |
+|-------|-------------|----------------|
+| $300,000 | $2.28 | **$2.69** |
+| $400,000 | $2.82 | **$3.32** |
+| $500,000 | $3.36 | **$3.95** |
+
+**Spot (可中断, 保本底线) — Baseline 情景**
+
+| 节点价 | 保本 = Spot 最低价 |
+|-------|----------------|
+| $300,000 | **$2.28** |
+| $400,000 | **$2.82** |
+| $500,000 | **$3.36** |
+
+> On-demand (目标 40% CM) 和 Demand Down/Demand Up 情景的完整二维表见 `models/pricing_recommendations.csv`。获得 NVIDIA 或授权经销商正式报价后, 此表重算并升级至 A/B 级证据。
 
 ### 🔴 节点采购价敏感性 (D 级估算, 待正式报价)
 
@@ -105,17 +121,19 @@
 
 ### 部署配置 (来自 methodology/model_deployment_profiles.yaml)
 
-| 模型 | 总参/激活 | 架构 | 原生上下文 | GPU 配置 | TP | benchmark |
-|------|----------|------|----------|---------|-----|-----------|
-| DeepSeek V4 Flash (0731) | 284B/13B | MoE | 1M | 8×H100 SXM5 | 8 | 🔴 not_run |
-| DeepSeek V4 Pro | 1.6T/49B | MoE | 1M | 16×H100 (2 nodes) | 8+PP2 | 🔴 not_run |
-| Qwen 3.5 Flash (35B-A3B) | 35B/3B | MoE混合 | 262K | 8×H100 SXM5 | 8 | 🔴 not_run |
-| Qwen 3.5 9B | 9B/9B | Dense | 262K | 1×H100 | 1 | 🔴 not_run |
-| GPT-OSS 120B | 117B/5.1B | MoE | 128K | 1×H100 (MXFP4) | 1 | 🔴 not_run |
-| Gemma 4 31B | 30.7B/30.7B | Dense | 262K | 1×H100 (BF16) | 1 | 🔴 not_run |
-| GLM-5.2 | ~350B/~32B | MoE推理 | 1M | 8×H100 SXM5 | 8 | 🔴 not_run |
+| 模型 | 总参/激活 | 权重精度 | ckpt 大小 | GPU 配置 | HBM 总量 | 模型原生上下文 | 已测上下文 | benchmark |
+|------|----------|---------|----------|---------|---------|-------------|----------|-----------|
+| DeepSeek V4 Flash (0731) | 284B/13B | FP4+FP8 mixed | 167 GB | 8×H100 SXM5 | 640 GB | 1M | 🔴 未测 | 🔴 not_run |
+| DeepSeek V4 Pro | 1.6T/49B | FP4+FP8 mixed | 865 GB | 16×H100 (2 nodes) | 1280 GB | 1M | 🔴 未测 | 🔴 not_run |
+| Qwen 3.5 Flash (35B-A3B) | 35B/3B | FP8 | — | 8×H100 SXM5 | — | 262K | 🔴 未测 | 🔴 not_run |
+| Qwen 3.5 9B | 9B/9B | BF16 | — | 1×H100 | — | 262K | 🔴 未测 | 🔴 not_run |
+| GPT-OSS 120B | 117B/5.1B | MXFP4 | — | 1×H100 | — | 128K | 🔴 未测 | 🔴 not_run |
+| Gemma 4 31B | 30.7B/30.7B | BF16 | — | 1×H100 | — | 262K | 🔴 未测 | 🔴 not_run |
+| GLM-5.2 | ~350B/~32B | FP8 | — | 8×H100 SXM5 | — | 1M | 🔴 未测 | 🔴 not_run |
 
-> Qwen 3.5 Flash 已修正：原方案 1×H100 + 1M 上下文 + 28K tok/s 缺乏官方部署依据。现采用官方长上下文示例 (TP=8, 262K native context) 作为保守基线。
+> **DeepSeek V4 checkpoint 精度已修正** (第五轮)：Pro/Flash 的官方 checkpoint 为 **FP4 experts + FP8 其他参数** (混合精度), 非纯 FP8。Pro checkpoint ~865GB 可装入 16×H100 (1280GB HBM) 的权重, 但运行时/上下文/并发均未验证。此前标为"纯 FP8"是错误的——纯 FP8 的 1.6T Pro (~1.6TB) 根本无法装入 1.28TB HBM。来源: HuggingFace 模型卡 (`deepseek-ai/DeepSeek-V4-Pro`, `DeepSeek-V4-Flash-0731`)。
+>
+> **"模型原生上下文" ≠ "已测部署上下文"**：所有模型的 `max_context_tested` 均为 null。不可假定候选 GPU 配置已支持完整原生上下文。Qwen 3.5 Flash 已修正：原方案 1×H100 + 1M + 28K tok/s 缺乏依据, 现采用官方长上下文示例 (TP=8, 262K)。
 
 ### 竞品价格 (per provider route, snapshot 2026-08-12)
 

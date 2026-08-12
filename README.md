@@ -4,7 +4,18 @@
 
 ## 状态
 
-> **Draft v4 — GPUaaS 模型基本可信, MaaS 毛利 🔴 无效 (待 benchmark)。**
+<!-- BEGIN STATUS -->
+> **draft_v6 — 第五轮评审修正**
+
+- 测试: **31 项** (`tests/test_calculations.py`)
+- GPUaaS: 公式结构已校正；核心 CapEx (节点价) 和运行输入待正式报价及实测验证
+- MaaS 毛利: 🔴 无效 (待 benchmark)
+- DGX 节点价: D 级内部估算 (待正式报价)
+- 构建确定性: manifest 无 VCS 身份；两次临时构建 byte-identical
+- CI 结果以 [GitHub Actions](../../actions) 当前状态为准。
+
+_由 `project_status.yaml` + `src/render_status.py` 生成, 请勿手改此段。_
+<!-- END STATUS -->
 
 ## 构建
 
@@ -18,8 +29,14 @@ python src/build_all.py
 # 验证来源
 python src/validate_sources.py
 
-# 运行测试 (16 项, 含独立 fixture)
+# 运行测试 (项数见 project_status.yaml)
 python tests/test_calculations.py
+
+# 同步 README/报告状态段 (由 project_status.yaml 生成)
+python src/render_status.py
+
+# 确定性检查 (临时目录构建两次, 不改工作区)
+python src/check_generated.py
 ```
 
 ## 目录结构

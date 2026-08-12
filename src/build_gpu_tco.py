@@ -246,6 +246,47 @@ def build_node_price_sensitivity():
     return pd.DataFrame(rows)
 
 
+def build_pricing_recommendations():
+    """Recommended $/GPU/hr as a 2-D function of node price AND scenario.
+
+    The node price is an unverified internal estimate (confidence D). A fixed
+    pricing recommendation that assumes $300k becomes a loss if the real quote
+    is $400k (break-even rises from $2.28 to $2.82). Instead we output, for
+    each (node_price, scenario) pair, the minimum price that achieves a target
+    infrastructure contribution margin:
+
+        recommended_price = break_even(node_price, scenario) / (1 - target_cm)
+
+    This guarantees no recommended price implies a negative margin, regardless
+    of the eventual node-quote outcome.
+    """
+    # Target infrastructure contribution margins by procurement tier.
+    TARGET_CM = {
+        "spot": 0.00,       # covers break-even only (marginal floor)
+        "reserved": 0.15,   # 15% contribution margin for committed term
+        "on_demand": 0.40,  # 40% contribution margin for flexible on-demand
+    }
+    node_prices = [NODE_PRICE, NODE_PRICE + 100000, NODE_PRICE + 200000]  # 300k/400k/500k
+    main_scenarios = ["demand_down", "baseline", "demand_up"]
+
+    rows = []
+    for tier, target_cm in TARGET_CM.items():
+        for np_ in node_prices:
+            for skey in main_scenarios:
+                s = SCENARIOS[skey]
+                be = break_even_price_per_gpu_hr(s, node_price=np_)
+                rec = be / (1 - target_cm) if target_cm < 1 else be
+                rows.append({
+                    "tier": tier,
+                    "target_cm": target_cm,
+                    "node_price_usd": np_,
+                    "scenario": s["label"],
+                    "break_even_per_gpu_hr": round(be, 2),
+                    "recommended_price_per_gpu_hr": round(rec, 2),
+                })
+    return pd.DataFrame(rows)
+
+
 if __name__ == "__main__":
     pd.set_option("display.float_format", lambda x: f"{x:,.2f}")
     pd.set_option("display.width", 200)

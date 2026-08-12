@@ -1,0 +1,27 @@
+# Single source of truth for project status.
+# README and report status sections are generated from this file by
+# src/render_status.py. NEVER hand-write version/test-count/CI claims in
+# README.md or the report — edit this file and re-run the generator.
+
+version: draft_v6
+round: 第五轮评审修正
+
+# CI status: NEVER claim "green" statically. CI result is whatever GitHub
+# Actions shows right now. Set to false and let the generator emit a
+# "see Actions" line instead of a hardcoded claim.
+ci_status_claim_allowed: false
+
+# Status labels for key modules. These map to short human-readable strings
+# emitted into the README/report status block.
+statuses:
+  gpuaas: "公式结构已校正；核心 CapEx (节点价) 和运行输入待正式报价及实测验证"
+  gpuaas_pricing: "定价建议已改为节点价敏感的二维表"
+  maas_margin: "🔴 无效 (待 benchmark)"
+  maas_deployment: "部署配置 memory-feasibility candidate；运行时/上下文/并发未验证"
+  deepseek_checkpoint: "已修正为 FP4+FP8 mixed (非纯 FP8)；ckpt < HBM"
+  dgx_node_price: "D 级内部估算 (待正式报价)"
+  build_determinism: "manifest 无 VCS 身份；两次临时构建 byte-identical"
+  bpo_market: "双基期 CAGR (2025/2026) 已标注"
+  gpuaaS_market: "行业背景, 非 PLDT TAM"
+
+last_updated: "2026-08-12"

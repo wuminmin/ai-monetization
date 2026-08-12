@@ -21,10 +21,13 @@ PLDT-03,VITRO Sta. Rosa capacity,50,MW,Philippines,VITRO official,https://vitrod
 PLDT-04,PLDT planned new DC,100,MW min,Philippines,VITRO official,https://vitrodc.com,2026,2026-08-11,vendor,A,12th DC
 PLDT-05,PLDT revenue,196.2,B PHP,Philippines,PLDT financials,https://main.pldt.com,2025,2026-08-11,filing,A,FY2025
 PLDT-06,PLDT EBITDA,111.2,B PHP,Philippines,PLDT financials,https://main.pldt.com,2025,2026-08-11,filing,A,FY2025
-DSK-01,DeepSeek V4 Flash params,284B/13B,total/active,model,OpenRouter API,https://openrouter.ai/deepseek/deepseek-v4-flash-0731,2026-04,2026-08-12,model_card,A,
-DSK-02,DeepSeek V4 Pro params,1.6T/49B,total/active,model,OpenRouter API,https://openrouter.ai/deepseek/deepseek-v4-pro,2026-04,2026-08-12,model_card,A,
+DSK-01,DeepSeek V4 Flash params,284B/13B,total/active,model,OpenRouter API,https://openrouter.ai/deepseek/deepseek-v4-flash-0731,2026-04,2026-08-12,model_card,A,Params only; checkpoint precision from HF model card
+DSK-02,DeepSeek V4 Pro params,1.6T/49B,total/active,model,OpenRouter API,https://openrouter.ai/deepseek/deepseek-v4-pro,2026-04,2026-08-12,model_card,A,Params only; checkpoint precision from HF model card
 DSK-03,Qwen3.5-35B-A3B params,35B/3B,total/active,model,OpenRouter API,https://openrouter.ai/qwen/qwen3.5-flash-02-23,2026-02,2026-08-12,model_card,A,Native ctx 262K
 DSK-04,GPT-OSS 120B params,117B/5.1B,total/active,model,OpenRouter API,https://openrouter.ai/openai/gpt-oss-120b,2026,2026-08-12,model_card,A,MXFP4
+DSK-05,DeepSeek V4 Pro checkpoint size,865,GB,model,Hugging Face,https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro,2026,2026-08-12,official_repository,A,FP4 experts + FP8 other; ~865GB on disk
+DSK-06,DeepSeek V4 Pro checkpoint precision,FP4_EXPERTS_FP8_OTHER,format,model,Hugging Face,https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro,2026,2026-08-12,official_repository,A,MoE expert params FP4; most other params FP8 (NOT pure FP8)
+DSK-07,DeepSeek V4 Flash 0731 checkpoint size,167,GB,model,Hugging Face,https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash-0731,2026,2026-08-12,official_repository,A,Mixed precision (BF16+F32+F8_E4M3+I8); ~167GB on disk
 MAAS-GLM-01,GLM-5.2 OpenRouter price,0.4886/1.536,USD/M_in/out,OpenRouter,OpenRouter,https://openrouter.ai/z-ai/glm-5.2,2026-08,2026-08-12,vendor,A,65% off promo active. See data/pricing_snapshots/maas_openrouter.csv
 MAAS-DSK-F1,DeepSeek V4 Flash 0731 price,0.0798/0.1596,USD/M_in/out,OpenRouter,OpenRouter,https://openrouter.ai/deepseek/deepseek-v4-flash-0731,2026-08,2026-08-12,vendor,A,43% off promo active. See data/pricing_snapshots/maas_openrouter.csv
 MAAS-DSK-F2,DeepSeek V4 Flash 0423 price,0.0679/0.168,USD/M_in/out,OpenRouter,OpenRouter,https://openrouter.ai/deepseek/deepseek-v4-flash,2026-08,2026-08-12,vendor,A,Slug now resolves to 0423; prior $0.14/$0.28 was Direct-API mis-attribution

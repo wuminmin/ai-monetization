@@ -1,5 +1,70 @@
 # 变更日志
 
+## [2026-08-12 v6] Round 5 review corrections
+
+### P0-1: 修复确定性构建的自引用缺陷 (CI 永远无法变绿的根因)
+
+- **根因**：tracked manifest (`models/build_metadata.json`) 记录了 `git_commit`、`generated_at`、`source_date_epoch`。提交后新 commit 的 SHA 与 manifest 记录的不同 → CI 重建必然 diff → 永远失败。
+- **修复**：tracked manifest 只保留**纯内容 hash** (assumptions_hash、sources_hash、generator_code_hash 等), 删除所有 VCS 身份和时间字段。
+- 所有 provenance (git_commit、build_wall_clock、ci_run_id) 移至 gitignored `build/runtime_metadata.json`。
+- **`check_generated.py` 完全重写**：在临时目录构建两次, hash 比较 byte-identical, 再与仓库已提交的 10 个产物比较 freshness。全程不修改真实工作区 (修掉了旧版原地 build + git diff 的实现/文档不一致)。
+- `build_all.py` 新增 `build_all(output_dirs=...)` 函数式入口, 供 check_generated 和测试构建到临时目录。
+- CI workflow 移除 `SOURCE_DATE_EPOCH` 注入, 改用 `check_generated.py`。
+- **结果**：任何新 commit 后 CI 重建不再产生 manifest diff (自引用消除)。
+
+### P0-2: DeepSeek V4 checkpoint 精度修正 (物理错误)
+
+- **根因**：`model_deployment_profiles.yaml` 把 V4 Pro/Flash 标为 `weight_format: FP8`。但 V4 Pro 纯 FP8 (~1.6TB) > 16×H100 的 1.28TB HBM, 权重根本装不下。
+- **修复** (来自 HuggingFace 模型卡实测)：
+  - V4 Pro: `FP4_EXPERTS_FP8_OTHER` (混合精度), checkpoint 865GB, 可装入 16×H100 (1280GB) 权重
+  - V4 Flash 0731: `FP4_EXPERTS_FP8_OTHER`, checkpoint 167GB, 可装入 8×H100 (640GB)
+- 新增字段：`checkpoint_precision`、`checkpoint_size_gb`、`total_hbm_gb`、`weights_fit`、`runtime_fit`、`model_max_context`、`max_context_tested` (分离原生上下文 vs 已测上下文)。
+- 部署状态从"Multi-node candidate"改为"**memory-feasibility candidate, 运行时未验证**"。
+- `data/sources.csv` 新增 DSK-05/06/07 (HuggingFace checkpoint size + precision)。
+
+### 附加 A (§10): 单一状态源 + 生成器 (消除漂移)
+
+- **根因**：README 说 v4/16 测试, 报告说 v5/23 测试, CHANGELOG 说 CI 变绿 (实际红)。三处手工写、必然漂移。
+- **新建 `project_status.yaml`** (唯一状态源) + **`src/render_status.py`** (生成器)。
+- README 和报告的状态段用 `<!-- BEGIN/END STATUS -->` 标记包围, 由生成器从 YAML 注入。
+- test_count 由生成器动态计算 (`grep -c "^def test_"`), 不手写。
+- CI 状态永远写"以 GitHub Actions 当前状态为准", **绝不**手写"CI green"。
+
+### 附加 B (§11): 节点价敏感的定价二维表
+
+- **根因**：报告定价建议 Reserved $2.69 假设 $300k 节点价; 但 $400k 时保本 $2.82, $2.69 反而亏 4.8%。
+- **新建 `models/pricing_recommendations.csv`**：行=节点价 ($300k/$400k/$500k) × 列=情景 × tier (Spot/Reserved/On-demand)。
+- 公式：`建议价 = 保本价 ÷ (1 − 目标 CM)`。Reserved 目标 15% CM, Spot 保本底线。
+- 结果：Reserved 在 $300k→$2.69, $400k→$3.32, $500k→$3.95 (随未验证 CapEx 浮动, 不再有负毛利)。
+
+### 测试
+
+- 测试从 23 增至 **31 项** (新增 8)：
+  - `test_build_twice_is_byte_identical` (临时目录两次构建 hash 相等)
+  - `test_check_generated_does_not_modify_worktree` (检查器不改工作区)
+  - `test_deepseek_checkpoint_precision` (V4 Pro/Flash = FP4+FP8 mixed)
+  - `test_checkpoint_size_fits_total_hbm` (每模型 ckpt < HBM)
+  - `test_deployment_context_not_assumed` (max_context_tested = null)
+  - `test_reserved_price_covers_break_even` (无负毛利)
+  - `test_pricing_table_scales_with_node_price` (定价随节点价上升)
+  - `test_project_status_consistent` (yaml test_count == 实际; 标记段一致)
+- 强化 `test_build_metadata_exists` → 断言 manifest 无 VCS 身份。
+
+### 不变性
+
+- MaaS 毛利率仍为 🔴 无效 (未 benchmark, 不计算)
+- GPUaaS 毛利率仍为基础设施贡献口径
+- MaaS 路由价格仍为 2026-08-12 快照
+
+### 明确排除 (留待下轮 P1)
+
+- 外化 SCENARIOS / COMPETITORS / 非 BPO MARKET_DATA 到 YAML/CSV (manifest 仍有 null hash)
+- 保存 raw OpenRouter JSON + 重算 content_hash
+- validate_sources 强化 (published_at/route/region 检查)
+- OpenRouter route → model_slug 重命名
+- sources.csv 补齐 Qwen 9B / GPT-OSS / Gemma 的 claim ID
+- 全报告 render_report.py (仅做状态段注入)
+
 ## [2026-08-12 v5] Round 4 review corrections
 
 ### P0-1: 确定性构建 + CI 变绿

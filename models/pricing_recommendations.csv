@@ -1,0 +1,28 @@
+﻿tier,target_cm,node_price_usd,scenario,break_even_per_gpu_hr,recommended_price_per_gpu_hr
+spot,0.0,300000,Demand Down,3.86,3.86
+spot,0.0,300000,Baseline,2.28,2.28
+spot,0.0,300000,Demand Up,1.73,1.73
+spot,0.0,400000,Demand Down,4.78,4.78
+spot,0.0,400000,Baseline,2.82,2.82
+spot,0.0,400000,Demand Up,2.14,2.14
+spot,0.0,500000,Demand Down,5.7,5.7
+spot,0.0,500000,Baseline,3.36,3.36
+spot,0.0,500000,Demand Up,2.54,2.54
+reserved,0.15,300000,Demand Down,3.86,4.54
+reserved,0.15,300000,Baseline,2.28,2.69
+reserved,0.15,300000,Demand Up,1.73,2.04
+reserved,0.15,400000,Demand Down,4.78,5.63
+reserved,0.15,400000,Baseline,2.82,3.32
+reserved,0.15,400000,Demand Up,2.14,2.51
+reserved,0.15,500000,Demand Down,5.7,6.71
+reserved,0.15,500000,Baseline,3.36,3.95
+reserved,0.15,500000,Demand Up,2.54,2.99
+on_demand,0.4,300000,Demand Down,3.86,6.43
+on_demand,0.4,300000,Baseline,2.28,3.8
+on_demand,0.4,300000,Demand Up,1.73,2.89
+on_demand,0.4,400000,Demand Down,4.78,7.97
+on_demand,0.4,400000,Baseline,2.82,4.7
+on_demand,0.4,400000,Demand Up,2.14,3.56
+on_demand,0.4,500000,Demand Down,5.7,9.51
+on_demand,0.4,500000,Baseline,3.36,5.6
+on_demand,0.4,500000,Demand Up,2.54,4.23
